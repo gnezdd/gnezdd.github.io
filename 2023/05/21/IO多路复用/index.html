@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="dd">
+    
+    <title>
+        
+            IO多路复用 |
+        
+        dd&#39;s things
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/regular.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/solid.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/brands.min.css">
+    
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN","path":"search.json"}
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066cc","logo":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp","favicon":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp","avatar":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/avatar.11yw6gp0tnrk.webp","font_size":null,"font_family":null,"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"header_transparent":true,"background_img":"/images/bg.svg","description":"talk is cheap, show you the code.","font_color":null,"hitokoto":false},"scroll":{"progress_bar":true,"percent":true}},"local_search":{"enable":true,"preload":true},"code_block":{"tools":{"enable":true,"style":"mac"},"highlight_theme":"default"},"side_tools":{},"pjax":{"enable":true},"lazyload":{"enable":true},"comment":{"enable":false,"use":"valine","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":null,"github_admins":null,"repository":null,"client_id":null,"client_secret":null,"proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.8"},"waline":{"server_url":null,"reaction":false,"version":2}},"post":{"author_label":{"enable":false,"auto":true,"custom_label_list":["Trainee","Engineer","Architect"]},"word_count":{"enable":true,"wordcount":true,"min2read":true},"img_align":"center","copyright_info":true},"website_count":{"busuanzi_count":{"enable":true,"site_uv":true,"site_pv":true,"page_pv":true}},"version":"3.7.0"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <i class="pjax-progress-icon fas fa-circle-notch fa-spin"></i>
+    
+</div>
+
+
+<main class="page-container border-box">
+
+    <!-- home first screen  -->
+    
+
+    <!-- page content -->
+    <div class="page-main-content border-box">
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp">
+                </a>
+            
+            <a class="site-name" href="/">
+               dd&#39;s things
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                标签
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">标签</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle border-box">
+
+            <div class="main-content border-box">
+
+                
+
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+
+        <div class="article-content-container border-box">
+
+            <div class="article-title">
+                <span class="title-hover-animation">IO多路复用</span>
+            </div>
+
+            
+                <div class="article-header border-box">
+                    
+                        <div class="avatar-box border-box">
+                            <img src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/avatar.11yw6gp0tnrk.webp">
+                        </div>
+                    
+                    <div class="info-box">
+                        <div class="author">
+                            <span class="name">dd</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info-container border-box post">
+    <div class="article-meta-info border-box">
+        
+
+
+        
+            
+                <span class="meta-info-item article-date">
+                    <i class="icon fa-regular fa-calendar-plus"></i>&nbsp;
+                    <span class="pc">2023-05-21 02:20:04</span>
+                    <span class="mobile">2023-05-21 02:20</span>
+                </span>
+            
+
+            
+                <span class="meta-info-item article-update-date">
+                    <i class="icon fas fa-file-pen"></i>&nbsp;
+                    <span class="pc">2023-08-05 18:57:16</span>
+                </span>
+            
+        
+
+        
+            <span class="meta-info-item article-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul>
+                    
+                            <li class="category-item">
+                                
+                                <a href="/categories/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/">IO多路复用</a>
+                            </li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+            <span class="article-tag meta-info-item border-box">
+                <i class="icon fas fa-tags"></i>&nbsp;
+                <ul>
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/">IO多路复用</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+        
+            <span class="meta-info-item article-wordcount">
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>4.1k 字</span>
+            </span>
+        
+        
+            <span class="meta-info-item article-min2read">
+                <i class="icon fas fa-clock"></i>&nbsp;<span>18 分钟</span>
+            </span>
+        
+        
+            <span class="meta-info-item article-pv">
+                <i class="icon fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    </div>
+
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content keep-markdown-body">
+                
+
+                <h1 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h1><p>IO多路复用是一种同步IO模型，实现一个线程可以同时监视多个文件描述符；一旦某个文件描述符就绪，就能够通知应用程序进行相应的读写操作</p>
+<p>多路是指多个网络连接，复用指的是同一个线程</p>
+<p>Linux提供了select、poll、epoll三种接口函数实现IO多路复用</p>
+<p>select&amp;poll是将文件描述符存放到文件描述符集合中，调用select&#x2F;poll将文件描述符集合拷贝到内核中，内核会遍历文件描述符集合看是否有事件发生，如果有就将对应的文件描述符标记为可读或可写，然后再将整个文件描述符集合拷贝到用户态中，在用户态进行遍历对发生了事件的文件描述符进行处理</p>
+<p>epoll是使用一个文件描述符管理多个文件描述符，将用户感兴趣的文件描述符添加到内核中，由内核监听并返回发生了事件的文件描述符</p>
+<h2 id="为什么需要IO多路复用"><a href="#为什么需要IO多路复用" class="headerlink" title="为什么需要IO多路复用"></a>为什么需要IO多路复用</h2><p>在没有IO多路复用之前有BIO和NIO两种实现方式，但是都有一些问题</p>
+<h3 id="BIO同步阻塞"><a href="#BIO同步阻塞" class="headerlink" title="BIO同步阻塞"></a>BIO同步阻塞</h3><ul>
+<li>服务端采用单线程，当accept一个请求后调用recv或send被阻塞时，没办法处理其他的请求，必须等待上一个recv或send调用完才可以处理（没办法实现并发，在同一时刻只能处理一个请求或者被阻塞）</li>
+<li>如果服务端采用多线程或多进程，在accept一个请求后创建一个相应的线程或进程负责这一个请求，可以实现并发，但是随着请求数量的增加会增大系统的开销（线程进程切换、进程资源的消耗、线程安全等）</li>
+</ul>
+<h3 id="NIO同步非阻塞"><a href="#NIO同步非阻塞" class="headerlink" title="NIO同步非阻塞"></a>NIO同步非阻塞</h3><ul>
+<li>服务端accept一个请求后加入fds集合，每次轮询一次fds集合recv或send数据，没有数据就立即返回，不会阻塞，但是每次都需要去轮询fds，会消耗性能</li>
+</ul>
+<h3 id="IO多路复用-1"><a href="#IO多路复用-1" class="headerlink" title="IO多路复用"></a>IO多路复用</h3><p>服务端采用单线程通过IO多路复用将需要监听的文件描述符集合交给内核监听，由内核返回发生了事件的文件描述符，能够在同一时刻监听多个文件描述符</p>
+<p>主要是IO多路复用能够在一个线程中实现并发操作（同时监听多个文件描述符）</p>
+<h2 id="API说明"><a href="#API说明" class="headerlink" title="API说明"></a>API说明</h2><h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/select.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">select</span><span class="params">(<span class="type">int</span> nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, <span class="keyword">struct</span> timeval *timeout)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>返回：若有就绪描述符则为其个数，超时为0，出错-1并设置errno</p>
+<p>参数：除了nfds，其他都通过指针传递，以便于内核可以修改通知应用程序</p>
+<ul>
+<li>nfds：指定被监听的文件描述符个数，通常为监听的所有文件描述符中的最大值加1</li>
+<li>readfds\writefds\exceptfds分别对应可读、可写和异常事件文件描述符集合，当调用select时就通过这三个参数传入进程感兴趣的文件描述符，交给内核监听。内核通过修改它们通知应用程序有哪些文件描述符就绪</li>
+<li>timeout：内核会修改这个参数表示自己等待了多长的时间，但是这个参数时不能够完全信任的，因为调用失败后timeout的值是不确定的<ul>
+<li>0：立刻返回</li>
+<li>NULL：一直阻塞直到有文件描述符就绪</li>
+<li>其他：指定阻塞等待多长时间</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/select.h&gt;</span></span></span><br><span class="line"><span class="built_in">FD_ZERO</span>(fd_set *fdset);		<span class="comment">/* 清除fdset所有标志位 */</span></span><br><span class="line"><span class="built_in">FD_SET</span>(<span class="type">int</span> fd, fd_set fdset);		<span class="comment">/* 设置fdset标志位fd */</span></span><br><span class="line"><span class="built_in">FD_CLR</span>(<span class="type">int</span> fd, fd_set fdset);		<span class="comment">/* 清除fdset标志位fd */</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">FD_ISSET</span><span class="params">(<span class="type">int</span> fd, fd_set *fdset)</span></span>;	<span class="comment">/* 测试fdset的位fd是否被设置 */</span></span><br></pre></td></tr></table></figure>
+
+<p><code>fd_set</code>结构体包含一个整型数组，数组中每一个元素的每一位代表一个文件描述符，相当于一个位图，<code>fd_set</code>能够容纳的文件描述符数量由FD_SETSIZE指定（限制了select能够监听的文件描述符数量）</p>
+<h3 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;poll.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">poll</span><span class="params">(<span class="keyword">struct</span> pollfd *fds, <span class="type">nfds_t</span> nfds, <span class="type">int</span> timeout)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>返回：若有就绪描述符则为其数目，超时为0，出错-1</p>
+<p>参数：</p>
+<ul>
+<li>nfds：被监听的文件描述符集合fds的大小</li>
+<li>timeout：<ul>
+<li>-1：一直阻塞直到某个时间发生</li>
+<li>0：马上返回</li>
+<li>其他：指定poll的超时值</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">pollfd</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> fd;			<span class="comment">/* 文件描述符 */</span></span><br><span class="line">	<span class="type">short</span> events;		<span class="comment">/* 注册的事件 */</span></span><br><span class="line">	<span class="type">short</span> revents;		<span class="comment">/* 实际发生的事件，有内核填充 */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>poll支持的事件类型：</p>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230806/image.1791083cprmk.webp"
+                      alt="image-20230312204932503"
+                ></p>
+<h3 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/epoll.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">epoll_create</span><span class="params">(<span class="type">int</span> size)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>返回：成功返回创建的内核事件表对应的描述符，出错-1</p>
+<p>size参数现在并不起作用，只是给内核一个提示，告诉它内核表需要多大，该函数返回的文件描述符将用作其他所有epoll函数的第一个参数，以指定要访问的内核事件表</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/epoll.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">epoll_ctl</span><span class="params">(<span class="type">int</span> opfd, <span class="type">int</span> op, <span class="type">int</span> fd, <span class="keyword">struct</span> epoll_event *event)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>返回：成功返回0，出错-1</p>
+<p>fd参数是要操作的文件描述符，op指定操作类型，操作类型有3种</p>
+<ul>
+<li>EPOLL_CTL_ADD：往事件表中注册fd上的事件</li>
+<li>EPOLL_CTL_MOD：修改fd上的注册事件</li>
+<li>EPOLL_CTL_DEL：删除fd上的注册事件</li>
+</ul>
+<p>event指定事件类型，它是epoll_event结构指针类型。epoll支持的事件类型和poll基本相同，表示epoll事件类型的宏是在poll对应的宏加上”E”，比如epoll的数据可读事件是EPOLLIN，但epoll有两个额外的事件类型-EPOLLET和EPOLLONESHOT</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">epoll_event</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">__uint32_t</span> events;	<span class="comment">/* epoll事件 */</span></span><br><span class="line">	<span class="type">epoll_data_t</span> data;	<span class="comment">/* 用户数据 */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>data用于存储用户数据</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">union</span> <span class="title class_">epoll_data</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">void</span> *ptr;</span><br><span class="line">	<span class="type">int</span> fd;</span><br><span class="line">	<span class="type">uint32_t</span> u32;</span><br><span class="line">	<span class="type">uint64_t</span> u64;</span><br><span class="line">&#125;<span class="type">epoll_data_t</span>;</span><br></pre></td></tr></table></figure>
+
+<p>epoll_data_t是一个联合体，其4个成员最多使用的是fd，它指定事件所从属的目标文件描述符，ptr成员可用来指定fd相关的用户数据，但由于opoll_data_t是一个联合体，我们不能同时使用fd和ptr，如果要将文件描述符和用户数据关联起来，以实现快速的数据访问，则只能使用其他手段，比如放弃使用fd成员，而在ptr指针指向的用户数据中包含fd</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/epoll.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">epoll_wait</span><span class="params">(<span class="type">int</span> epfd, <span class="keyword">struct</span> epoll_event *events, <span class="type">int</span> maxevents, <span class="type">int</span> timeout)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>返回：成功返回就绪的文件描述符个数，出错-1</p>
+<p>timeout参数的含义与poll接口的timeout参数相同，maxevents参数指定最多监听多少个事件，它必须大于0</p>
+<p>epoll_wait如果检测到事件，就将所有就绪的事件从内核事件表(由epfd指定)中复制到events指定的数组中</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>最好都搭配非阻塞IO：</p>
+<ul>
+<li><p>多路复用返回的事件不一定是可读写的，可能有发现数据已经达到通知应用程序，但是由于发现错误的校验和被丢弃，此时就没有数据可读</p>
+</li>
+<li><p>防止程序发生阻塞</p>
+</li>
+</ul>
+<h3 id="select-poll"><a href="#select-poll" class="headerlink" title="select&amp;poll"></a>select&amp;poll</h3><p>区别：</p>
+<ul>
+<li>select<strong>使用固定长度的位图表示文件描述符集合</strong>，所支持的文件描述符受到内核FD_SETSIZE限制，默认是1024；poll没有文件描述符数量的限制，是<strong>采用动态数组存储</strong></li>
+<li>select函数在会<strong>修改文件描述符集合的内容，没办法复用</strong>需要重新设置；poll是<strong>通过revents对文件描述符集合进行修改，不需要重新设置</strong></li>
+<li>select用户关心不同的事件<strong>需要添加到不同的文件描述符集合</strong>中；poll不需要，是<strong>在结构体中直接设置</strong></li>
+<li><strong>select支持跨平台；poll不支持</strong></li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>需要进行两次遍历与两次拷贝</li>
+<li>无法动态添加文件描述符，需要等前一个select&#x2F;poll返回后添加</li>
+<li>客户端多个连接但是少数活跃的话会导致效率比较低</li>
+</ul>
+<h3 id="epoll-1"><a href="#epoll-1" class="headerlink" title="epoll"></a>epoll</h3><p>优点：</p>
+<ul>
+<li><strong>减少数据拷贝</strong>：在内核中使用红黑树对文件描述符进行管理，不需要每次都将整个文件描述符拷贝到内核中，只需要通过epoll_ctl将要变更的文件描述符交给内核</li>
+<li><strong>提高检测效率</strong>：基于事件机制，有事件发生时通过回调函数添加到就绪链表中，再将就绪链表返回给用户，不需要轮询整个集合</li>
+</ul>
+<p>缺点：</p>
+<p>在<strong>连接数少并且连接都十分活跃的情况下</strong>，select和poll的性能可能比epoll好，毕竟epoll的通知机制<strong>需要很多函数回调去将发生事件的文件描述符添加到就绪链表中</strong>（红黑树中的查询）</p>
+<h2 id="两种触发模式"><a href="#两种触发模式" class="headerlink" title="两种触发模式"></a>两种触发模式</h2><blockquote>
+<p>LT水平触发（默认）</p>
+</blockquote>
+<p>当检测到有事件发生会将事件通知应用程序，应用程序如果不处理该事件则下次再次调用时，会再次通知应用程序</p>
+<blockquote>
+<p>ET边缘触发</p>
+</blockquote>
+<p>当检测到有事件发生会将此事件通知应用程序，应用程序必须立即处理该事件，如果不处理，下次调用时，不会再次通知应用程序该事件的发生</p>
+<p>一般和非阻塞IO配合使用：</p>
+<ul>
+<li><p>IO事件只会通知一次，应用程序不知道能够读写多少数据，所以<strong>在收到通知后应该尽可能读写数据以免错失读写机会</strong></p>
+</li>
+<li><p><strong>循环执行非阻塞IO操作知道返回错误没有数据可读写</strong></p>
+</li>
+</ul>
+<blockquote>
+<p>选择</p>
+</blockquote>
+<ul>
+<li><strong>大流量下使用ET性能会更好，不会频繁调用epoll_wait</strong></li>
+<li><strong>LT不会丢失数据而且可以通过使用大缓冲机制一次read就读取数据，ET需要一直读取知道返回EAGAIN（至少需要两次read）</strong><ul>
+<li>当没有数据可读的时候非阻塞IO就会返回EAGAGIN告诉应用程序没有数据可以读了，需要稍后再试</li>
+</ul>
+</li>
+<li><strong>LT可以照顾多个连接的公平性，不会因为某个连接数据过大影响其他连接处理消息</strong></li>
+</ul>
+<h2 id="API使用"><a href="#API使用" class="headerlink" title="API使用"></a>API使用</h2><h3 id="select-1"><a href="#select-1" class="headerlink" title="select"></a>select</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;selectServer.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/select.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">getMaxNumOfVector</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;fds)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> res = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; fds.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        res = <span class="built_in">max</span>(res,fds[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">flipVector</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;fds)</span> </span>&#123;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; newFds;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; fds.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (fds[i] != <span class="number">-1</span>) &#123;</span><br><span class="line">            newFds.<span class="built_in">push_back</span>(fds[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> newFds;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> listenFd, connFd;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">sockaddr_in</span> server;</span><br><span class="line">	<span class="comment">// 绑定服务器并监听</span></span><br><span class="line">    listenFd = <span class="built_in">socket</span>(AF_INET,SOCK_STREAM,<span class="number">0</span>);</span><br><span class="line">    <span class="built_in">memset</span>(&amp;server,<span class="number">0</span>,<span class="built_in">sizeof</span>(server));</span><br><span class="line">    server.sin_family = AF_INET;</span><br><span class="line">    server.sin_port = <span class="built_in">htons</span>(<span class="number">8888</span>);</span><br><span class="line">    server.sin_addr.s_addr = INADDR_ANY;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">bind</span>(listenFd,(<span class="keyword">struct</span> sockaddr*)&amp;server,<span class="built_in">sizeof</span>(server));</span><br><span class="line">    <span class="built_in">listen</span>(listenFd,<span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化参数</span></span><br><span class="line">    fd_set readFd;</span><br><span class="line">    fd_set writeFd;</span><br><span class="line">    fd_set exceptFd;</span><br><span class="line">    <span class="type">char</span> buff[<span class="number">1024</span>];</span><br><span class="line"></span><br><span class="line">    <span class="built_in">FD_ZERO</span>(&amp;readFd);</span><br><span class="line">    <span class="built_in">FD_ZERO</span>(&amp;writeFd);</span><br><span class="line">    <span class="built_in">FD_ZERO</span>(&amp;exceptFd);</span><br><span class="line"></span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; fds;</span><br><span class="line">    fds.<span class="built_in">push_back</span>(STDIN_FILENO);</span><br><span class="line">    fds.<span class="built_in">push_back</span>(listenFd);</span><br><span class="line"></span><br><span class="line">    <span class="type">bool</span> running = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (running) &#123;</span><br><span class="line">        <span class="built_in">memset</span>(buff,<span class="number">0</span>,<span class="built_in">sizeof</span>(buff));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 每次调用select都需要重新初始化readFd和exceptFd中的文件描述符集合</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; fds.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">            <span class="built_in">FD_SET</span>(fds[i],&amp;readFd);</span><br><span class="line">            <span class="keyword">if</span> ((fds[i] != STDIN_FILENO) &amp;&amp; (fds[i] != listenFd)) &#123;</span><br><span class="line">                <span class="built_in">FD_SET</span>(fds[i],&amp;exceptFd);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">	</span><br><span class="line">        <span class="type">int</span> eventNum = <span class="built_in">select</span>(<span class="built_in">getMaxNumOfVector</span>(fds) + <span class="number">1</span>, &amp;readFd, &amp;writeFd, &amp;exceptFd, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (eventNum &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            cerr &lt;&lt; <span class="string">&quot;select error&quot;</span> &lt;&lt; endl;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; fds.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (fds[i] == STDIN_FILENO) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="built_in">FD_ISSET</span>(STDIN_FILENO, &amp;readFd)) &#123;</span><br><span class="line">                    cin &gt;&gt; buff;</span><br><span class="line">                    <span class="keyword">if</span> (<span class="built_in">strcmp</span>(buff,<span class="string">&quot;quit&quot;</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">                        running = <span class="literal">false</span>;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        cout &lt;&lt; buff &lt;&lt; endl;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (fds[i] == listenFd) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="built_in">FD_ISSET</span>(listenFd, &amp;readFd)) &#123;</span><br><span class="line">                    connFd = <span class="built_in">accept</span>(listenFd,<span class="literal">NULL</span>,<span class="literal">NULL</span>);</span><br><span class="line">                    <span class="keyword">if</span> (connFd &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                        running = <span class="literal">false</span>;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    fds.<span class="built_in">push_back</span>(connFd);</span><br><span class="line">                    cout &lt;&lt; <span class="string">&quot;向fds添加&quot;</span> &lt;&lt; connFd &lt;&lt; <span class="string">&quot;,fds.size:&quot;</span> &lt;&lt; fds.<span class="built_in">size</span>() &lt;&lt; endl;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="built_in">FD_ISSET</span>(fds[i],&amp;readFd)) &#123;</span><br><span class="line">                    <span class="type">int</span> len = <span class="built_in">recv</span>(fds[i],buff,<span class="built_in">sizeof</span>(buff)<span class="number">-1</span>,<span class="number">0</span>);</span><br><span class="line">                    <span class="keyword">if</span> (len &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                        cerr &lt;&lt; <span class="string">&quot;recv error&quot;</span> &lt;&lt; endl;</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (len == <span class="number">0</span>) &#123;</span><br><span class="line">                        cout &lt;&lt; <span class="string">&quot;从fds删除&quot;</span> &lt;&lt; fds[i] &lt;&lt; endl;</span><br><span class="line">                        <span class="built_in">close</span>(fds[i]);</span><br><span class="line">                        <span class="comment">// 断开连接</span></span><br><span class="line">                        fds[i] = <span class="number">-1</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        buff[len] = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">                        cout &lt;&lt; fds[i] &lt;&lt; <span class="string">&quot;recv:&quot;</span> &lt;&lt; buff &lt;&lt; endl;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">FD_ISSET</span>(fds[i], &amp;writeFd)) &#123;</span><br><span class="line"></span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">FD_ISSET</span>(fds[i],&amp;exceptFd)) &#123;</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        fds = <span class="built_in">flipVector</span>(fds);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 关闭文件描述符</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; fds.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        <span class="built_in">close</span>(fds[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="poll-1"><a href="#poll-1" class="headerlink" title="poll"></a>poll</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;pollServer.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/poll.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">pollfd</span> *<span class="built_in">getPollFd</span>(vector&lt;pollfd&gt; &amp;fds, <span class="type">int</span> *ppoll_size)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">pollfd</span> *poll = (<span class="keyword">struct</span> pollfd *) <span class="built_in">malloc</span>(fds.<span class="built_in">size</span>() * <span class="built_in">sizeof</span>(<span class="keyword">struct</span> pollfd));</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; fds.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        poll[i].fd = fds[i].fd;</span><br><span class="line">        poll[i].events = fds[i].events;</span><br><span class="line">    &#125;</span><br><span class="line">    *ppoll_size = fds.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">return</span> poll;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">vector&lt;pollfd&gt; <span class="title">flipVector</span><span class="params">(vector&lt;pollfd&gt; &amp;fds)</span> </span>&#123;</span><br><span class="line">    vector&lt;pollfd&gt; fdsnew;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; fds.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (fds[i].fd != <span class="number">-1</span>) &#123;</span><br><span class="line">            fdsnew.<span class="built_in">push_back</span>(fds[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> fdsnew;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 绑定服务器</span></span><br><span class="line">    <span class="type">int</span> listenFd, connFd;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">sockaddr_in</span> server;</span><br><span class="line"></span><br><span class="line">    listenFd = <span class="built_in">socket</span>(AF_INET,SOCK_STREAM,<span class="number">0</span>);</span><br><span class="line">    <span class="built_in">memset</span>(&amp;server,<span class="number">0</span>, <span class="built_in">sizeof</span>(server));</span><br><span class="line">    server.sin_addr.s_addr = INADDR_ANY;</span><br><span class="line">    server.sin_port = <span class="built_in">htons</span>(<span class="number">8888</span>);</span><br><span class="line">    server.sin_family = AF_INET;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">bind</span>(listenFd,(<span class="keyword">struct</span> sockaddr*)&amp;server, <span class="built_in">sizeof</span>(server));</span><br><span class="line">    <span class="built_in">listen</span>(listenFd,<span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">pollfd</span> poll_fd;</span><br><span class="line">    vector&lt;<span class="keyword">struct</span> pollfd&gt; fds;</span><br><span class="line"></span><br><span class="line">    poll_fd.fd = STDIN_FILENO;</span><br><span class="line">    poll_fd.events = POLLIN;</span><br><span class="line">    fds.<span class="built_in">push_back</span>(poll_fd);</span><br><span class="line"></span><br><span class="line">    <span class="type">char</span> buff[<span class="number">1024</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">pollfd</span> *ppoll = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="type">int</span> poll_size = <span class="number">0</span>;</span><br><span class="line">    ppoll = <span class="built_in">getPollFd</span>(fds,&amp;poll_size);</span><br><span class="line"></span><br><span class="line">    <span class="type">bool</span> running = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (running) &#123;</span><br><span class="line">        <span class="type">int</span> oldSize = fds.<span class="built_in">size</span>();</span><br><span class="line">        <span class="built_in">memset</span>(buff,<span class="number">0</span>, <span class="built_in">sizeof</span>(buff));</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> eventNum = <span class="built_in">poll</span>(ppoll,poll_size,<span class="number">-1</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (eventNum &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            cerr &lt;&lt; <span class="string">&quot;poll error&quot;</span> &lt;&lt; endl;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> fds_size = fds.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; fds_size; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (ppoll[i].fd == STDIN_FILENO) &#123;</span><br><span class="line">                <span class="keyword">if</span> (ppoll[i].revents &amp; POLLIN) &#123;</span><br><span class="line">                    cin &gt;&gt; buff;</span><br><span class="line">                    <span class="keyword">if</span> (<span class="built_in">strcmp</span>(buff,<span class="string">&quot;quit&quot;</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">                        running = <span class="literal">false</span>;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        cout &lt;&lt; buff &lt;&lt; endl;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ppoll[i].fd == listenFd) &#123;</span><br><span class="line">                <span class="keyword">if</span> (ppoll[i].revents &amp; POLLIN) &#123;</span><br><span class="line">                    connFd = <span class="built_in">accept</span>(listenFd,<span class="literal">NULL</span>,<span class="literal">NULL</span>);</span><br><span class="line">                    <span class="keyword">if</span> (connFd &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                        running = <span class="literal">false</span>;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    poll_fd.fd = connFd;</span><br><span class="line">                    poll_fd.events = POLLIN;</span><br><span class="line">                    fds.<span class="built_in">push_back</span>(poll_fd);</span><br><span class="line">                    cout &lt;&lt; <span class="string">&quot;向fds添加&quot;</span> &lt;&lt; connFd &lt;&lt; endl;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (ppoll[i].revents &amp; POLLIN) &#123;</span><br><span class="line">                    <span class="type">int</span> len = <span class="built_in">recv</span>(ppoll[i].fd,buff, <span class="built_in">sizeof</span>(buff)<span class="number">-1</span>,<span class="number">0</span>);</span><br><span class="line">                    <span class="keyword">if</span> (len &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                        cerr &lt;&lt; <span class="string">&quot;recv error&quot;</span> &lt;&lt; endl;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (len == <span class="number">0</span>) &#123;</span><br><span class="line">                        cout &lt;&lt; <span class="string">&quot;从fds删除&quot;</span> &lt;&lt; fds[i].fd &lt;&lt; endl;</span><br><span class="line">                        <span class="built_in">close</span>(fds[i].fd);</span><br><span class="line">                        fds[i].events = <span class="number">0</span>;</span><br><span class="line">                        fds[i].fd = <span class="number">-1</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        buff[len] = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">                        cout &lt;&lt; fds[i].fd &lt;&lt; <span class="string">&quot;recv:&quot;</span> &lt;&lt; buff &lt;&lt; endl;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        fds = <span class="built_in">flipVector</span>(fds);</span><br><span class="line">        <span class="keyword">if</span> (oldSize != fds.<span class="built_in">size</span>()) &#123;</span><br><span class="line">            <span class="built_in">free</span>(ppoll);</span><br><span class="line">            ppoll = <span class="built_in">getPollFd</span>(fds,&amp;poll_size);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; fds.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (fds[i].fd != <span class="number">-1</span>) &#123;</span><br><span class="line">            <span class="built_in">close</span>(fds[i].fd);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="epoll-2"><a href="#epoll-2" class="headerlink" title="epoll"></a>epoll</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;epollServer.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/epoll.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">addfd</span><span class="params">(<span class="type">int</span> epollfd, <span class="type">int</span> fd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    epoll_event event;</span><br><span class="line"></span><br><span class="line">    event.data.fd = fd;</span><br><span class="line">    event.events = EPOLLIN;</span><br><span class="line">    <span class="built_in">epoll_ctl</span>(epollfd, EPOLL_CTL_ADD, fd, &amp;event);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">delfd</span><span class="params">(<span class="type">int</span> epollfd, <span class="type">int</span> fd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    epoll_event event;</span><br><span class="line"></span><br><span class="line">    event.data.fd = fd;</span><br><span class="line">    event.events = EPOLLIN;</span><br><span class="line">    <span class="built_in">epoll_ctl</span>(epollfd, EPOLL_CTL_DEL, fd, &amp;event);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> listenfd, connfd;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">sockaddr_in</span> servaddr;</span><br><span class="line"></span><br><span class="line">    listenfd = <span class="built_in">socket</span>(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">memset</span>(&amp;servaddr, <span class="number">0</span>, <span class="built_in">sizeof</span>(servaddr));</span><br><span class="line">    servaddr.sin_family = AF_INET;</span><br><span class="line">    servaddr.sin_port = <span class="built_in">htons</span>(<span class="number">8080</span>);</span><br><span class="line">    servaddr.sin_addr.s_addr = INADDR_ANY;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">bind</span>(listenfd, (<span class="keyword">struct</span> sockaddr *)&amp;servaddr, <span class="built_in">sizeof</span>(servaddr));</span><br><span class="line">    <span class="built_in">listen</span>(listenfd, <span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> epollfd = <span class="built_in">epoll_create</span>(<span class="number">32</span>);</span><br><span class="line">    <span class="keyword">if</span> (epollfd &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        cerr &lt;&lt; <span class="string">&quot;epoll_create error&quot;</span> &lt;&lt; endl;</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">addfd</span>(epollfd, STDIN_FILENO);</span><br><span class="line">    <span class="built_in">addfd</span>(epollfd, listenfd);</span><br><span class="line"></span><br><span class="line">    epoll_event events[<span class="number">32</span>];</span><br><span class="line"></span><br><span class="line">    <span class="type">char</span> buff[<span class="number">1024</span>];</span><br><span class="line">    <span class="type">bool</span> running = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">while</span> (running) &#123;</span><br><span class="line">        buff[<span class="number">0</span>] = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> event_num = <span class="built_in">epoll_wait</span>(epollfd, events, <span class="number">32</span>, <span class="number">-1</span>);</span><br><span class="line">        <span class="keyword">if</span> (event_num &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            cerr &lt;&lt; <span class="string">&quot;epoll_wait error&quot;</span> &lt;&lt; endl;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; event_num; i++) &#123;</span><br><span class="line">            <span class="type">int</span> fd = events[i].data.fd;</span><br><span class="line">            <span class="type">int</span> event = events[i].events;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (fd == STDIN_FILENO) &#123;</span><br><span class="line">                <span class="comment">// 从STDIN_FILENO中读取数据</span></span><br><span class="line">                <span class="keyword">if</span> (event &amp; EPOLLIN) &#123;</span><br><span class="line">                    cin &gt;&gt; buff;</span><br><span class="line">                    <span class="keyword">if</span> (<span class="built_in">strcmp</span>(buff, <span class="string">&quot;quit&quot;</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">                        running = <span class="literal">false</span>;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">else</span> &#123;</span><br><span class="line">                        cout &lt;&lt; buff &lt;&lt; endl;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (fd == listenfd) &#123;</span><br><span class="line">                <span class="keyword">if</span> (event &amp; EPOLLIN) &#123;</span><br><span class="line">                    connfd = <span class="built_in">accept</span>(listenfd, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</span><br><span class="line">                    <span class="keyword">if</span> (connfd &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                        running = <span class="literal">false</span>;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="built_in">addfd</span>(epollfd, connfd);</span><br><span class="line">                    cout &lt;&lt; <span class="string">&quot;往epoll添加 &quot;</span> &lt;&lt; connfd &lt;&lt; endl;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (event &amp; EPOLLIN) &#123;</span><br><span class="line">                    <span class="type">int</span> len = <span class="built_in">recv</span>(fd, buff, <span class="built_in">sizeof</span>(buff) - <span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">                    <span class="keyword">if</span> (len &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                        cerr &lt;&lt; <span class="string">&quot;recv error&quot;</span> &lt;&lt; endl;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">else</span> <span class="keyword">if</span> (len == <span class="number">0</span>) &#123;</span><br><span class="line">                        cout &lt;&lt; <span class="string">&quot;从epoll删除 &quot;</span> &lt;&lt; fd &lt;&lt; endl;</span><br><span class="line">                        <span class="comment">// 客户端断开了连接</span></span><br><span class="line">                        <span class="built_in">delfd</span>(epollfd, fd);</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">else</span> &#123;</span><br><span class="line">                        buff[len] = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">                        cout &lt;&lt; fd &lt;&lt; <span class="string">&quot; recv: &quot;</span> &lt;&lt; buff &lt;&lt; endl;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 关闭文件描述符</span></span><br><span class="line">    <span class="built_in">close</span>(listenfd);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    
+<div class="article-copyright-info-container">
+    <ul class="copyright-info-content">
+        <li class="post-title">
+            <span class="type">本文标题</span>：<span class="content">IO多路复用</span>
+        </li>
+        <li class="post-author">
+            <span class="type">本文作者</span>：<span class="content">dd</span>
+        </li>
+        <li class="post-time">
+            <span class="type">创建时间</span>：<span class="content">2023-05-21 02:20:04</span>
+        </li>
+        <li class="post-link">
+            <span class="type">本文链接</span>：<span class="content">2023/05/21/IO多路复用/</span>
+        </li>
+        <li class="post-license">
+            <span class="type">版权声明</span>：<span class="content">本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！</span>
+        </li>
+    </ul>
+    <div class="copy-copyright-info flex-center tooltip" data-content="复制版权信息" data-offset-y="-2px">
+        <i class="fa-solid fa-copy"></i>
+    </div>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/tags/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/"><i class="icon fas fa-hashtag"></i>IO多路复用</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                               rel="prev"
+                               href="/2023/06/06/%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"
+                            >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                                <span class="title flex-center">
+                                <span class="post-nav-title-item text-ellipsis">红黑树vs平衡二叉树 &amp; B+树vsB树vs跳表</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                               rel="next"
+                               href="/2023/05/13/Linux%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/"
+                            >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item text-ellipsis">Linux操作命令</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                                <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+            
+                <div class="comment-container">
+                    
+
+
+
+
+
+
+                </div>
+            
+        </div>
+
+        
+            <div class="pc-post-toc">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-text">IO多路复用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-text">为什么需要IO多路复用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BIO%E5%90%8C%E6%AD%A5%E9%98%BB%E5%A1%9E"><span class="nav-text">BIO同步阻塞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NIO%E5%90%8C%E6%AD%A5%E9%9D%9E%E9%98%BB%E5%A1%9E"><span class="nav-text">NIO同步非阻塞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8-1"><span class="nav-text">IO多路复用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API%E8%AF%B4%E6%98%8E"><span class="nav-text">API说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#select"><span class="nav-text">select</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#poll"><span class="nav-text">poll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#epoll"><span class="nav-text">epoll</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#select-poll"><span class="nav-text">select&amp;poll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#epoll-1"><span class="nav-text">epoll</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E8%A7%A6%E5%8F%91%E6%A8%A1%E5%BC%8F"><span class="nav-text">两种触发模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API%E4%BD%BF%E7%94%A8"><span class="nav-text">API使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#select-1"><span class="nav-text">select</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#poll-1"><span class="nav-text">poll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#epoll-2"><span class="nav-text">epoll</span></a></li></ol></li></ol></li></ol>
+    </div>
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom border-box">
+            
+<footer class="footer border-box">
+    <div class="border-box website-info-box default">
+        
+            <div class="copyright-info info-item default">
+                &copy;&nbsp;<span>2023</span>&nbsp;-&nbsp;2023
+                
+                    &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">dd</a>
+                
+            </div>
+
+            <div class="theme-info info-item default">
+                由&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.7.0</a>
+            </div>
+
+            
+
+            
+                <div class="deploy-info info-item default">
+                    
+                    <a target="_blank" rel="nofollow" href="https://github.com/">
+                        
+                        本站由 <span class="tooltip" data-content="GitHub Pages"><img src="/images/deploy-provider/github.png"></span> 提供部署服务
+                        
+                    </a>
+                    
+                </div>
+            
+        
+
+        <div class="count-item info-item default">
+            
+
+            
+                <span class="count-box border-box uv">
+                    <span class="item-type border-box">访问人数</span>
+                    <span class="item-value border-box uv" id="busuanzi_value_site_uv"></span>
+                </span>
+            
+
+            
+                <span class="count-box border-box pv">
+                    <span class="item-type border-box">总访问量</span>
+                    <span class="item-value border-box pv" id="busuanzi_value_site_pv"></span>
+                </span>
+            
+        </div>
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    <!-- post tools -->
+    
+        <div class="post-tools">
+            <div class="post-tools-container border-box">
+    <ul class="tools-list border-box">
+        <!-- PC TOC show toggle -->
+        
+            <li class="tools-item flex-center toggle-show-toc">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        <!-- PC go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        
+            <li class="tools-item toggle-show-toc-tablet flex-center">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        
+
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <!-- image mask -->
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    <!-- local search -->
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- tablet toc -->
+    
+        <div class="tablet-post-toc-mask">
+            <div class="tablet-post-toc">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-text">IO多路复用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-text">为什么需要IO多路复用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BIO%E5%90%8C%E6%AD%A5%E9%98%BB%E5%A1%9E"><span class="nav-text">BIO同步阻塞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NIO%E5%90%8C%E6%AD%A5%E9%9D%9E%E9%98%BB%E5%A1%9E"><span class="nav-text">NIO同步非阻塞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8-1"><span class="nav-text">IO多路复用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API%E8%AF%B4%E6%98%8E"><span class="nav-text">API说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#select"><span class="nav-text">select</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#poll"><span class="nav-text">poll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#epoll"><span class="nav-text">epoll</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#select-poll"><span class="nav-text">select&amp;poll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#epoll-1"><span class="nav-text">epoll</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E8%A7%A6%E5%8F%91%E6%A8%A1%E5%BC%8F"><span class="nav-text">两种触发模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API%E4%BD%BF%E7%94%A8"><span class="nav-text">API使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#select-1"><span class="nav-text">select</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#poll-1"><span class="nav-text">poll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#epoll-2"><span class="nav-text">epoll</span></a></li></ol></li></ol></li></ol>
+    </div>
+</div>
+
+            </div>
+        </div>
+    
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/dark-light-toggle.js"></script>
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/code-block.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/lazyload.js"></script>
+
+
+<div class="post-scripts pjax">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/post-helper.js"></script>
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/libs/anime.min.js"></script>
+        
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/toc.js"></script>
+        
+    
+    
+    
+</div>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            KEEP.refresh();
+        });
+    });
+</script>
+
+
+
+
+</body>
+</html>

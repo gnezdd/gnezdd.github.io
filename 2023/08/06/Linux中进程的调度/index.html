@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="dd">
+    
+    <title>
+        
+            Linux中进程的调度 |
+        
+        dd&#39;s things
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/regular.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/solid.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/brands.min.css">
+    
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN","path":"search.json"}
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066cc","logo":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp","favicon":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp","avatar":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/avatar.11yw6gp0tnrk.webp","font_size":null,"font_family":null,"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"header_transparent":true,"background_img":"/images/bg.svg","description":"talk is cheap, show you the code.","font_color":null,"hitokoto":false},"scroll":{"progress_bar":true,"percent":true}},"local_search":{"enable":true,"preload":true},"code_block":{"tools":{"enable":true,"style":"mac"},"highlight_theme":"default"},"side_tools":{},"pjax":{"enable":true},"lazyload":{"enable":true},"comment":{"enable":false,"use":"valine","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":null,"github_admins":null,"repository":null,"client_id":null,"client_secret":null,"proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.8"},"waline":{"server_url":null,"reaction":false,"version":2}},"post":{"author_label":{"enable":false,"auto":true,"custom_label_list":["Trainee","Engineer","Architect"]},"word_count":{"enable":true,"wordcount":true,"min2read":true},"img_align":"center","copyright_info":true},"website_count":{"busuanzi_count":{"enable":true,"site_uv":true,"site_pv":true,"page_pv":true}},"version":"3.7.0"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <i class="pjax-progress-icon fas fa-circle-notch fa-spin"></i>
+    
+</div>
+
+
+<main class="page-container border-box">
+
+    <!-- home first screen  -->
+    
+
+    <!-- page content -->
+    <div class="page-main-content border-box">
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp">
+                </a>
+            
+            <a class="site-name" href="/">
+               dd&#39;s things
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                标签
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">标签</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle border-box">
+
+            <div class="main-content border-box">
+
+                
+
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+
+        <div class="article-content-container border-box">
+
+            <div class="article-title">
+                <span class="title-hover-animation">Linux中进程的调度</span>
+            </div>
+
+            
+                <div class="article-header border-box">
+                    
+                        <div class="avatar-box border-box">
+                            <img src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/avatar.11yw6gp0tnrk.webp">
+                        </div>
+                    
+                    <div class="info-box">
+                        <div class="author">
+                            <span class="name">dd</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info-container border-box post">
+    <div class="article-meta-info border-box">
+        
+
+
+        
+            
+                <span class="meta-info-item article-date">
+                    <i class="icon fa-regular fa-calendar-plus"></i>&nbsp;
+                    <span class="pc">2023-08-06 02:53:55</span>
+                    <span class="mobile">2023-08-06 02:53</span>
+                </span>
+            
+
+            
+                <span class="meta-info-item article-update-date">
+                    <i class="icon fas fa-file-pen"></i>&nbsp;
+                    <span class="pc">2023-08-05 18:57:16</span>
+                </span>
+            
+        
+
+        
+            <span class="meta-info-item article-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul>
+                    
+                            <li class="category-item">
+                                
+                                <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
+                            </li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+            <span class="article-tag meta-info-item border-box">
+                <i class="icon fas fa-tags"></i>&nbsp;
+                <ul>
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/Linux%E8%BF%9B%E7%A8%8B%E7%9A%84%E8%B0%83%E5%BA%A6/">Linux进程的调度</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+        
+            <span class="meta-info-item article-wordcount">
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>988 字</span>
+            </span>
+        
+        
+            <span class="meta-info-item article-min2read">
+                <i class="icon fas fa-clock"></i>&nbsp;<span>3 分钟</span>
+            </span>
+        
+        
+            <span class="meta-info-item article-pv">
+                <i class="icon fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    </div>
+
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content keep-markdown-body">
+                
+
+                <p><img  
+                     lazyload
+                     alt="image"
+                     data-src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230806/image.2mqt5g32kgm0.webp"
+                     
+                ></p>
+<p>Deadline &gt; Realtime &gt; Fair，这意味着 Linux 选择下一个任务执行的时候，会按照此优先级顺序进行选择，也就是说先从 dl_rq 里选择任务，然后从 rt_rq 里选择任务，最后从 cfs_rq 里选择任务</p>
+<p>Linux将按照优先级分为两种，优先级数值越小的优先级越高，实时任务优先级在0<del>99，普通任务在100</del>139，针对不同的任务有不同的调度策略</p>
+<h2 id="普通任务"><a href="#普通任务" class="headerlink" title="普通任务"></a>普通任务</h2><p><strong>Deadlind和RT调度器</strong></p>
+<ul>
+<li><p>调度策略</p>
+<ul>
+<li><p>SCHED_DEADLIND ：按照deadline继续调度，距离当前时间点最近的deadline的任务会被调度</p>
+</li>
+<li><p>SCHED_FIFO：对于相同优先级的任务按照先来先到的原则，但是优先级更高的任务可以抢占优先级低的任务</p>
+</li>
+<li><p>SCHED_RR：对于相同优先级发任务轮流运行，每个任务都有一定的时间片，时间片用完会被放到队尾保证相同优先级任务的公平性，但是高优先级任务可以抢占低优先级任务</p>
+</li>
+</ul>
+</li>
+<li><p>运行队列</p>
+<ul>
+<li>dl_rq、rt_rq</li>
+</ul>
+</li>
+</ul>
+<h2 id="实时任务"><a href="#实时任务" class="headerlink" title="实时任务"></a>实时任务</h2><p><strong>CSF调度器</strong></p>
+<ul>
+<li><p>调度策略</p>
+<ul>
+<li><p>SCHED_NORMAL：普通任务使用的调度策略</p>
+</li>
+<li><p>SCHED_BATCH：后台任务的调度策略，不和终端进行交互，因此在不影响其他需要交互的任务可以适当降低优先级</p>
+</li>
+</ul>
+</li>
+<li><p>CFS完全公平调度算法</p>
+<ul>
+<li><p>理念：实现任务运行的公平性，保障每个任务的运行时间差不多</p>
+</li>
+<li><p>使用虚拟运行时记录进程已经消耗了多少CPU时间，如果消耗得少那么就优先被调度；同时根据进程的权重计算虚拟运行时的增加，权重越高的进程虚拟运行时增加得越少（比如同样是增加了250ns的虚拟运行时，权重低的进程实际获取的CPU时间只有200ns，权重高的进程获得300ns）</p>
+<ul>
+<li>权重有优先级得来，但是会保证权重不会高于实时任务的优先级</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>运行队列cfs_rq</p>
+<ul>
+<li>使用红黑树实现，按照虚拟运行时排序，最左侧的叶子节点就是下一次会被调度的任务</li>
+</ul>
+</li>
+</ul>
+<h2 id="Linux进程调度器发展"><a href="#Linux进程调度器发展" class="headerlink" title="Linux进程调度器发展"></a>Linux进程调度器发展</h2><p><strong>O(n)调度器</strong></p>
+<ul>
+<li><p>设计理念</p>
+<ul>
+<li>将时间分成大量时间片，每个时间片开始时调度器从就绪队列中选择优先级最高的进程执行。进程可以用尽这个时间片，如果用不完剩下的时间会增加到下一个时间片中</li>
+</ul>
+</li>
+<li><p>时间片设计</p>
+<ul>
+<li><p>根据进程的静态优先级分配一个默认的时间片，优先级越高获得的时间片越大</p>
+</li>
+<li><p>静态优先级</p>
+<ul>
+<li>进程创建时初始的优先级</li>
+</ul>
+</li>
+<li><p>动态优先级</p>
+<ul>
+<li>每次进程调度的过程中会基于进程的静态优先级和进程剩下的时间片计算一个动态优先级</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>数据结构</p>
+<ul>
+<li><p>使用全局队列</p>
+</li>
+<li><p>每一层进程调度都需要遍历队列寻找最高优先级的进程</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>O(1)调度器</strong></p>
+<ul>
+<li><p>设计理念</p>
+<ul>
+<li>与O(n)调度器基本一致，但是获取最高优先级的进程是O(1)</li>
+</ul>
+</li>
+<li><p>时间片设计</p>
+<ul>
+<li><p>进程的优先级数字越小优先级越高<img  
+                     lazyload
+                     alt="image"
+                     data-src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230806/image.3oqa03b3af80.webp"
+                      alt="img"
+                ></p>
+</li>
+<li><p>与O(n)调度器类似，但是O(1)调度器会根据平均休眠时间调整优先级（与用户交互越多的进程优先级越高）</p>
+</li>
+</ul>
+</li>
+<li><p>数据结构</p>
+<ul>
+<li>进程的优先级是0-139，O(1)调度器生成139个队列，进程根据优先级存放到对应的队列中，按照优先级执行，可以O(1)获取最高优先级的进程</li>
+</ul>
+</li>
+<li><p>进程的运行顺序和时间片太依赖优先级，同时优先级是基于与用户交互频率，如果假设不成立那么调度器就有问题</p>
+</li>
+</ul>
+<p><strong>完全公平调度器CFS</strong></p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    
+<div class="article-copyright-info-container">
+    <ul class="copyright-info-content">
+        <li class="post-title">
+            <span class="type">本文标题</span>：<span class="content">Linux中进程的调度</span>
+        </li>
+        <li class="post-author">
+            <span class="type">本文作者</span>：<span class="content">dd</span>
+        </li>
+        <li class="post-time">
+            <span class="type">创建时间</span>：<span class="content">2023-08-06 02:53:55</span>
+        </li>
+        <li class="post-link">
+            <span class="type">本文链接</span>：<span class="content">2023/08/06/Linux中进程的调度/</span>
+        </li>
+        <li class="post-license">
+            <span class="type">版权声明</span>：<span class="content">本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！</span>
+        </li>
+    </ul>
+    <div class="copy-copyright-info flex-center tooltip" data-content="复制版权信息" data-offset-y="-2px">
+        <i class="fa-solid fa-copy"></i>
+    </div>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/tags/Linux%E8%BF%9B%E7%A8%8B%E7%9A%84%E8%B0%83%E5%BA%A6/"><i class="icon fas fa-hashtag"></i>Linux进程的调度</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+                <div class="article-nav">
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                               rel="next"
+                               href="/2023/08/06/%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/"
+                            >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item text-ellipsis">哈希算法&amp;一致性哈希</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                                <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+            
+                <div class="comment-container">
+                    
+
+
+
+
+
+
+                </div>
+            
+        </div>
+
+        
+            <div class="pc-post-toc">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E4%BB%BB%E5%8A%A1"><span class="nav-text">普通任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%97%B6%E4%BB%BB%E5%8A%A1"><span class="nav-text">实时任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E5%99%A8%E5%8F%91%E5%B1%95"><span class="nav-text">Linux进程调度器发展</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom border-box">
+            
+<footer class="footer border-box">
+    <div class="border-box website-info-box default">
+        
+            <div class="copyright-info info-item default">
+                &copy;&nbsp;<span>2023</span>&nbsp;-&nbsp;2023
+                
+                    &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">dd</a>
+                
+            </div>
+
+            <div class="theme-info info-item default">
+                由&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.7.0</a>
+            </div>
+
+            
+
+            
+                <div class="deploy-info info-item default">
+                    
+                    <a target="_blank" rel="nofollow" href="https://github.com/">
+                        
+                        本站由 <span class="tooltip" data-content="GitHub Pages"><img src="/images/deploy-provider/github.png"></span> 提供部署服务
+                        
+                    </a>
+                    
+                </div>
+            
+        
+
+        <div class="count-item info-item default">
+            
+
+            
+                <span class="count-box border-box uv">
+                    <span class="item-type border-box">访问人数</span>
+                    <span class="item-value border-box uv" id="busuanzi_value_site_uv"></span>
+                </span>
+            
+
+            
+                <span class="count-box border-box pv">
+                    <span class="item-type border-box">总访问量</span>
+                    <span class="item-value border-box pv" id="busuanzi_value_site_pv"></span>
+                </span>
+            
+        </div>
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    <!-- post tools -->
+    
+        <div class="post-tools">
+            <div class="post-tools-container border-box">
+    <ul class="tools-list border-box">
+        <!-- PC TOC show toggle -->
+        
+            <li class="tools-item flex-center toggle-show-toc">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        <!-- PC go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        
+            <li class="tools-item toggle-show-toc-tablet flex-center">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        
+
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <!-- image mask -->
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    <!-- local search -->
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- tablet toc -->
+    
+        <div class="tablet-post-toc-mask">
+            <div class="tablet-post-toc">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E4%BB%BB%E5%8A%A1"><span class="nav-text">普通任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%97%B6%E4%BB%BB%E5%8A%A1"><span class="nav-text">实时任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E5%99%A8%E5%8F%91%E5%B1%95"><span class="nav-text">Linux进程调度器发展</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        </div>
+    
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/dark-light-toggle.js"></script>
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/code-block.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/lazyload.js"></script>
+
+
+<div class="post-scripts pjax">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/post-helper.js"></script>
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/libs/anime.min.js"></script>
+        
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/toc.js"></script>
+        
+    
+    
+    
+</div>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            KEEP.refresh();
+        });
+    });
+</script>
+
+
+
+
+</body>
+</html>

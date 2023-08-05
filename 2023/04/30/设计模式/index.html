@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="dd">
+    
+    <title>
+        
+            设计模式 |
+        
+        dd&#39;s things
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/regular.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/solid.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/brands.min.css">
+    
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN","path":"search.json"}
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066cc","logo":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp","favicon":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp","avatar":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/avatar.11yw6gp0tnrk.webp","font_size":null,"font_family":null,"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"header_transparent":true,"background_img":"/images/bg.svg","description":"talk is cheap, show you the code.","font_color":null,"hitokoto":false},"scroll":{"progress_bar":true,"percent":true}},"local_search":{"enable":true,"preload":true},"code_block":{"tools":{"enable":true,"style":"mac"},"highlight_theme":"default"},"side_tools":{},"pjax":{"enable":true},"lazyload":{"enable":true},"comment":{"enable":false,"use":"valine","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":null,"github_admins":null,"repository":null,"client_id":null,"client_secret":null,"proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.8"},"waline":{"server_url":null,"reaction":false,"version":2}},"post":{"author_label":{"enable":false,"auto":true,"custom_label_list":["Trainee","Engineer","Architect"]},"word_count":{"enable":true,"wordcount":true,"min2read":true},"img_align":"center","copyright_info":true},"website_count":{"busuanzi_count":{"enable":true,"site_uv":true,"site_pv":true,"page_pv":true}},"version":"3.7.0"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <i class="pjax-progress-icon fas fa-circle-notch fa-spin"></i>
+    
+</div>
+
+
+<main class="page-container border-box">
+
+    <!-- home first screen  -->
+    
+
+    <!-- page content -->
+    <div class="page-main-content border-box">
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp">
+                </a>
+            
+            <a class="site-name" href="/">
+               dd&#39;s things
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                标签
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">标签</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle border-box">
+
+            <div class="main-content border-box">
+
+                
+
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+
+        <div class="article-content-container border-box">
+
+            <div class="article-title">
+                <span class="title-hover-animation">设计模式</span>
+            </div>
+
+            
+                <div class="article-header border-box">
+                    
+                        <div class="avatar-box border-box">
+                            <img src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/avatar.11yw6gp0tnrk.webp">
+                        </div>
+                    
+                    <div class="info-box">
+                        <div class="author">
+                            <span class="name">dd</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info-container border-box post">
+    <div class="article-meta-info border-box">
+        
+
+
+        
+            
+                <span class="meta-info-item article-date">
+                    <i class="icon fa-regular fa-calendar-plus"></i>&nbsp;
+                    <span class="pc">2023-04-30 18:38:18</span>
+                    <span class="mobile">2023-04-30 18:38</span>
+                </span>
+            
+
+            
+                <span class="meta-info-item article-update-date">
+                    <i class="icon fas fa-file-pen"></i>&nbsp;
+                    <span class="pc">2023-08-05 18:57:16</span>
+                </span>
+            
+        
+
+        
+            <span class="meta-info-item article-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul>
+                    
+                            <li class="category-item">
+                                
+                                <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                            </li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+            <span class="article-tag meta-info-item border-box">
+                <i class="icon fas fa-tags"></i>&nbsp;
+                <ul>
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+        
+            <span class="meta-info-item article-wordcount">
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>3.1k 字</span>
+            </span>
+        
+        
+            <span class="meta-info-item article-min2read">
+                <i class="icon fas fa-clock"></i>&nbsp;<span>13 分钟</span>
+            </span>
+        
+        
+            <span class="meta-info-item article-pv">
+                <i class="icon fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    </div>
+
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content keep-markdown-body">
+                
+
+                <p>设计模式是指在软件开发中，经过验证的，用于解决在特定环境下，重复出现的，特定问题的解决方案</p>
+<p>按照设计目的分为三类：创建型模式、结构型模式和行为模式</p>
+<p>分别对应了面向对象开发的三个问题：如何创建对象、如何组合对象、如何处理对象之间的动态通信和职责分配</p>
+<h2 id="设计原则"><a href="#设计原则" class="headerlink" title="设计原则"></a>设计原则</h2><h3 id="单一职责"><a href="#单一职责" class="headerlink" title="单一职责"></a>单一职责</h3><p>在设计类的时候要尽量缩小粒度，使功能明确、单一，不要做多余的事情（高内聚，低耦合）</p>
+<p>单一职责下的类会比较小而精悍，需要使用结构性模式组合复用他们</p>
+<h3 id="开闭原则"><a href="#开闭原则" class="headerlink" title="开闭原则"></a>开闭原则</h3><p>一个类应该对扩展开发，对修改关闭</p>
+<p>关键是要做好封装，隐藏内部的实现细节，开发足够的接口，这样子外部的代码就只能通过接口去扩展功能，不需要侵入到类的内部</p>
+<p>final关键字</p>
+<p>不能说要实现某个功能必要要修改类内部的代码才能实现，需要能够通过扩展实现新的功能（低耦合）</p>
+<h3 id="里氏替换"><a href="#里氏替换" class="headerlink" title="里氏替换"></a>里氏替换</h3><p>子类能够完全替换父类，不会改变父类定义的行为</p>
+<p>比如一个基类鸟类中有一个方法，能够飞行，所有的鸟类都必须继承它，但是企鹅、鸵鸟这些没办法飞行（使用接口代替继承）</p>
+<h3 id="接口隔离"><a href="#接口隔离" class="headerlink" title="接口隔离"></a>接口隔离</h3><p>不应该强迫客户依赖于它们不需要的接口</p>
+<p>建立单一接口，不要建立庞大的接口，尽量细化，接口中的方法要建立少</p>
+<p>类“犬科”依赖接口I中的方法：捕食（），行走（），奔跑（）， 宠物狗类是对类“犬科”的实现。 对于具体的类：宠物狗来说，虽然存在着用不到的方法，但由于继承了接口，所以也必须要实现这些用不到的方法</p>
+<h3 id="依赖倒置"><a href="#依赖倒置" class="headerlink" title="依赖倒置"></a>依赖倒置</h3><p>上层要避免依赖下层的实现细节，两者都应该依赖于抽象</p>
+<p>比如Java的操作数据库，Java定义了一组接口，由各个数据库去实现它，Java不依赖于他们，数据库依赖于Java</p>
+<h3 id="组合优于继承"><a href="#组合优于继承" class="headerlink" title="组合优于继承"></a>组合优于继承</h3><p>继承耦合度高，组合耦合度低</p>
+<p>继承基类是固定好的，但是组合通过组合类的指针，可以传入不同的类，避免高耦合</p>
+<h2 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h2><h3 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h3><p>保证一个类仅有一个实例，并提供一个该实例的全局访问点</p>
+<h4 id="版本一"><a href="#版本一" class="headerlink" title="版本一"></a>版本一</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton1</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">static</span> Singleton1* <span class="title">GetInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            instance = <span class="keyword">new</span> <span class="built_in">Singleton1</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 防止外界构造和删除对象</span></span><br><span class="line">    <span class="built_in">Singleton1</span>() = <span class="keyword">default</span>;</span><br><span class="line">    ~<span class="built_in">Singleton1</span>() = <span class="keyword">default</span>;</span><br><span class="line">    <span class="built_in">Singleton1</span>(<span class="type">const</span> Singleton1&amp;) = <span class="keyword">default</span>;</span><br><span class="line">    Singleton1&amp; <span class="keyword">operator</span>=(<span class="type">const</span> Singleton1&amp;) = <span class="keyword">default</span>;</span><br><span class="line"></span><br><span class="line">    <span class="type">static</span> Singleton1 *instance;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Singleton1* Singleton1::instance = <span class="literal">nullptr</span>;</span><br></pre></td></tr></table></figure>
+
+<p>存在内存泄露问题，instance是在堆上的，需要手动释放，但是外界没办法调用delete释放对象</p>
+<p>线程安全问题，可能会有多个线程同时分配内存</p>
+<h4 id="版本二"><a href="#版本二" class="headerlink" title="版本二"></a>版本二</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton2</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">static</span> Singleton2* <span class="title">GetInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            instance = <span class="keyword">new</span> <span class="built_in">Singleton2</span>();</span><br><span class="line">            <span class="built_in">atexit</span>(Destructor); <span class="comment">// 在程序退出的时候释放</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 防止外界构造和删除对象</span></span><br><span class="line">    <span class="built_in">Singleton2</span>() = <span class="keyword">default</span>;</span><br><span class="line">    ~<span class="built_in">Singleton2</span>() = <span class="keyword">default</span>;</span><br><span class="line">    <span class="built_in">Singleton2</span>(<span class="type">const</span> Singleton2&amp;) = <span class="keyword">default</span>;</span><br><span class="line">    Singleton2&amp; <span class="keyword">operator</span>=(<span class="type">const</span> Singleton2&amp;) = <span class="keyword">default</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">Destructor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (instance != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            <span class="keyword">delete</span> instance;</span><br><span class="line">            instance = <span class="literal">nullptr</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">static</span> Singleton2 *instance;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Singleton2* Singleton2::instance = <span class="literal">nullptr</span>;</span><br></pre></td></tr></table></figure>
+
+<p>解决了内存泄露问题</p>
+<h4 id="版本三"><a href="#版本三" class="headerlink" title="版本三"></a>版本三</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton3</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">static</span> Singleton3* <span class="title">GetInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            <span class="function">lock_guard&lt;mutex&gt; <span class="title">lock</span><span class="params">(mutex_)</span></span>;</span><br><span class="line">            <span class="keyword">if</span> (instance == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">                instance = <span class="keyword">new</span> <span class="built_in">Singleton3</span>();</span><br><span class="line">                <span class="built_in">atexit</span>(Destructor);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 防止外界构造和删除对象</span></span><br><span class="line">    <span class="built_in">Singleton3</span>() = <span class="keyword">default</span>;</span><br><span class="line">    ~<span class="built_in">Singleton3</span>() = <span class="keyword">default</span>;</span><br><span class="line">    <span class="built_in">Singleton3</span>(<span class="type">const</span> Singleton3&amp;) = <span class="keyword">default</span>;</span><br><span class="line">    Singleton3&amp; <span class="keyword">operator</span>=(<span class="type">const</span> Singleton3&amp;) = <span class="keyword">default</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">Destructor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (instance != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            <span class="keyword">delete</span> instance;</span><br><span class="line">            instance = <span class="literal">nullptr</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">static</span> Singleton3 *instance;</span><br><span class="line">    <span class="type">static</span> mutex mutex_;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Singleton3* Singleton3::instance = <span class="literal">nullptr</span>;</span><br></pre></td></tr></table></figure>
+
+<p>new的时候的操作分为三步：分配内存、调用构造函数、返回指针</p>
+<p>有可能先返回指针当还没有调用构造函数导致对象没有初始化，其他线程获取到没有初始化的对象</p>
+<h4 id="版本四"><a href="#版本四" class="headerlink" title="版本四"></a>版本四</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton4</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">static</span> Singleton4* <span class="title">GetInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Singleton4* tmp = instance.<span class="built_in">load</span>(std::memory_order_relaxed);</span><br><span class="line">        <span class="built_in">atomic_thread_fence</span>(std::memory_order_acquire); <span class="comment">// 获取内存屏障</span></span><br><span class="line">        <span class="keyword">if</span> (tmp == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            <span class="function">lock_guard&lt;mutex&gt; <span class="title">lock</span><span class="params">(mutex_)</span></span>;</span><br><span class="line">            tmp = instance.<span class="built_in">load</span>(memory_order_relaxed);</span><br><span class="line">            <span class="keyword">if</span> (tmp == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">                tmp = <span class="keyword">new</span> Singleton4;</span><br><span class="line">                <span class="built_in">atomic_thread_fence</span>(std::memory_order_release); <span class="comment">// 释放内存屏障</span></span><br><span class="line">                instance.<span class="built_in">store</span>(tmp,memory_order_relaxed);</span><br><span class="line">                <span class="built_in">atexit</span>(Destructor);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> tmp;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 防止外界构造和删除对象</span></span><br><span class="line">    <span class="built_in">Singleton4</span>() = <span class="keyword">default</span>;</span><br><span class="line">    ~<span class="built_in">Singleton4</span>() = <span class="keyword">default</span>;</span><br><span class="line">    <span class="built_in">Singleton4</span>(<span class="type">const</span> Singleton4&amp;) = <span class="keyword">default</span>;</span><br><span class="line">    Singleton4&amp; <span class="keyword">operator</span>=(<span class="type">const</span> Singleton4&amp;) = <span class="keyword">default</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">Destructor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (instance != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            <span class="keyword">delete</span> instance;</span><br><span class="line">            instance = <span class="literal">nullptr</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">static</span> atomic&lt;Singleton4*&gt; instance;</span><br><span class="line">    <span class="type">static</span> mutex mutex_;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">atomic&lt;Singleton4*&gt; Singleton4::instance;</span><br><span class="line">mutex Singleton4::mutex_;</span><br></pre></td></tr></table></figure>
+
+<h4 id="版本五"><a href="#版本五" class="headerlink" title="版本五"></a>版本五</h4><p> c++11 magic static 特性：如果当变量在初始化的时候，并发同时进⼊声明语句，并发线程将 会阻塞等待初始化结束</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton5</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">static</span> Singleton5&amp; <span class="title">GetInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="type">static</span> Singleton5 instance;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">Singleton5</span>() = <span class="keyword">default</span>;</span><br><span class="line">    ~<span class="built_in">Singleton5</span>() = <span class="keyword">default</span>;</span><br><span class="line">    <span class="built_in">Singleton5</span>(<span class="type">const</span> Singleton5&amp;) = <span class="keyword">default</span>;</span><br><span class="line">    Singleton5&amp; <span class="keyword">operator</span>=(<span class="type">const</span> Singleton5&amp;) = <span class="keyword">default</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="版本六"><a href="#版本六" class="headerlink" title="版本六"></a>版本六</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton6</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">static</span> T&amp; <span class="title">GetInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="type">static</span> T instance;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Singleton6</span>() = <span class="keyword">default</span>;</span><br><span class="line">    <span class="built_in">Singleton6</span>() = <span class="keyword">default</span>;</span><br><span class="line">    <span class="built_in">Singleton6</span>(<span class="type">const</span> Singleton6&amp;) = <span class="keyword">default</span>;</span><br><span class="line">    Singleton6&amp; <span class="keyword">operator</span>=(<span class="type">const</span> Singleton6&amp;) = <span class="keyword">default</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DesignPattern</span> : <span class="keyword">public</span> Singleton6&lt;DesignPattern&gt; &#123;</span><br><span class="line">    <span class="keyword">friend</span> <span class="keyword">class</span> <span class="title class_">Singleton6</span>&lt;DesignPattern&gt;;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ~<span class="built_in">DesignPattern</span>() = <span class="keyword">default</span>;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">DesignPattern</span>() = <span class="keyword">default</span>;</span><br><span class="line">    <span class="built_in">DesignPattern</span>(<span class="type">const</span> DesignPattern&amp;) = <span class="keyword">default</span>;</span><br><span class="line">    DesignPattern&amp; <span class="keyword">operator</span>=(<span class="type">const</span> DesignPattern&amp;) = <span class="keyword">default</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    DesignaPattern &amp;d1 = <span class="keyword">new</span> DesignaPattern::<span class="built_in">getInstance</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="模板方法"><a href="#模板方法" class="headerlink" title="模板方法"></a>模板方法</h3><p>定义一个操作中的算法的骨架 ，但将一些步骤延迟到子类中。 Template Method使得子<strong>类可以不改变一个算法的结构即可重定义该算法的某些特定步骤</strong></p>
+<p>本质：通过固定算法骨架约束子类的行为</p>
+<p>理解：只是定义了一个模板是什么样子，但是具体怎么实现交给子类去实现</p>
+<h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>某个品牌动物园，有一套固定的表演流程，但是其中有若干个表演子流程可创新替换，以尝试迭代 更新表演流程</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Zoo</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">show</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="built_in">show1</span>();</span><br><span class="line">        <span class="built_in">show2</span>();</span><br><span class="line">        <span class="built_in">show3</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">show1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Zoo:show1()&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">show2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Zoo:show2()&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">show3</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Zoo:show3()&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Zoo1</span> : <span class="keyword">public</span> Zoo &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">show1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Zoo1:show0()&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">show2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Zoo1:show1()&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">show3</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Zoo1:show3()&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Zoo* zoo = <span class="keyword">new</span> Zoo1;</span><br><span class="line">    zoo-&gt;<span class="built_in">show</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h3><p>定义对象间的一种一对多（变化）的依赖关系，以便当一个对象(Subject)的状态发生改变时，所有依赖于它的对象都得到通知并自动更新</p>
+<p>要求：</p>
+<ul>
+<li>独立地改变目标与观察者，从而使二者之间的关系松耦合</li>
+<li>观察者自己决定是否订阅通知，目标对象并不关注谁订阅了</li>
+<li>观察者不要依赖通知顺序，目标对象也不知道通知顺序</li>
+</ul>
+<h4 id="背景-1"><a href="#背景-1" class="headerlink" title="背景"></a>背景</h4><p>气象站发布气象资料给数据中心，数据中心经过处理，将气象信息更新到两个不同的显示终端（A 和B）；</p>
+<p>上层：气象站</p>
+<p>下层：显示中断</p>
+<p>依赖：数据中心</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">IDisplay</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">show</span><span class="params">(<span class="type">float</span> temperature)</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">IDisplay</span>() = <span class="keyword">default</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">IDisplayA</span> : <span class="keyword">public</span> IDisplay &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">show</span><span class="params">(<span class="type">float</span> temperature)</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">IDisplayB</span> : <span class="keyword">public</span> IDisplay &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">show</span><span class="params">(<span class="type">float</span> temperature)</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WeatherData</span> &#123;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DataCenter</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">Attach</span><span class="params">(IDisplay *ob)</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">Detach</span><span class="params">(IDisplay *ob)</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">Notify</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="type">float</span> temper = <span class="built_in">CalcTemperature</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> iter = obs.<span class="built_in">begin</span>(); iter != obs.<span class="built_in">end</span>(); iter++) &#123;</span><br><span class="line">            (*iter)-&gt;<span class="built_in">show</span>(temper);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> WeatherData* <span class="title">GetWeatherData</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">float</span> <span class="title">CalcTemperature</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        WeatherData *data = <span class="built_in">GetWeatherData</span>();</span><br><span class="line">        <span class="type">float</span> temper;</span><br><span class="line">        <span class="keyword">return</span> temper;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    vector&lt;IDisplay*&gt; obs;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    DataCenter *center = <span class="keyword">new</span> DataCenter;</span><br><span class="line">    IDisplay *da = <span class="keyword">new</span> IDisplayA;</span><br><span class="line">    IDisplay *db = <span class="keyword">new</span> IDisplayB;</span><br><span class="line">    center-&gt;<span class="built_in">Attach</span>(da);</span><br><span class="line">    center-&gt;<span class="built_in">Attach</span>(db);</span><br><span class="line">    center-&gt;<span class="built_in">Notify</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h3><p>定义一系列算法，把它们一个个封装起来，并且使它们可<strong>互相替换</strong>。该模式使得算法可独立于使用它的客户程序而变化</p>
+<p>要点：</p>
+<p>策略模式<strong>提供了一系列可重用的算法，从而可以使得类型在运⾏时方便地根据需要在各个算法之间 进行切换</strong>（分离算法，选择实现）</p>
+<p>策略模式消除了条件判断语句；也就是在解耦合</p>
+<h4 id="背景-2"><a href="#背景-2" class="headerlink" title="背景"></a>背景</h4><p>某商场节假日有固定促销活动，为了加大促销力度，现提升国庆节促销活动规格</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Context</span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ProStategy</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">double</span> <span class="title">CalcPro</span><span class="params">(<span class="type">const</span> Context &amp;ctx)</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">ProStategy</span>() = <span class="keyword">default</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">VAC_Spring</span> : <span class="keyword">public</span> ProStategy &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">double</span> <span class="title">CalcPro</span><span class="params">(<span class="type">const</span> Context &amp;ctx)</span> </span>&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">VAC_QIXI</span> : <span class="keyword">public</span> ProStategy &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">double</span> <span class="title">CalcPro</span><span class="params">(<span class="type">const</span> Context &amp;ctx)</span> </span>&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Promotion</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Promotion</span>(ProStategy *sss) : <span class="built_in">s</span>(sss) &#123;&#125;</span><br><span class="line">    ~<span class="built_in">Promotion</span>()&#123;&#125;</span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">CalcPromotion</span><span class="params">(<span class="type">const</span> Context &amp;ctx)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> s-&gt;<span class="built_in">CalcPro</span>(ctx);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    ProStategy *s;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Context ctx;</span><br><span class="line">    ProStategy *s = <span class="keyword">new</span> <span class="built_in">VAC_QIXI</span>();</span><br><span class="line">    ProStategy *s1 = <span class="keyword">new</span> <span class="built_in">VAC_Spring</span>();</span><br><span class="line">    Promotion *p = <span class="keyword">new</span> <span class="built_in">Promotion</span>(s);</span><br><span class="line">    p-&gt;<span class="built_in">CalcPromotion</span>(ctx);</span><br><span class="line">    p = <span class="keyword">new</span> <span class="built_in">Promotion</span>(s1);</span><br><span class="line">    p-&gt;<span class="built_in">CalcPromotion</span>(ctx);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="工厂方法"><a href="#工厂方法" class="headerlink" title="工厂方法"></a>工厂方法</h3><p>定义一个用于创建对象的接口，让子类决定实例化哪一个类。Factory Method使得一个类的实例化延迟到子类</p>
+<p>场景：</p>
+<ul>
+<li>比如连接池、线程池</li>
+<li>隐藏对象真实类型</li>
+<li>对象创建会有很多参数来决定如何创建</li>
+<li>创建对象有复杂的依赖关系</li>
+</ul>
+<h4 id="背景-3"><a href="#背景-3" class="headerlink" title="背景"></a>背景</h4><p>实现一个导出数据的接口，让客户选择数据的导出方式</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">IExport</span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ExportXml</span> : <span class="keyword">public</span> IExport &#123;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">IExportFactory</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> IExport *<span class="title">newExport</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ExportXmlFactory</span> : <span class="keyword">public</span> IExportFactory &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">IExport *<span class="title">NewExport</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        IExport *temp = <span class="keyword">new</span> ExportXml;</span><br><span class="line">        <span class="keyword">return</span> temp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ExportData</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">ExportData</span>(IExportFactory *factory) : <span class="built_in">factory</span>(factory) &#123;&#125;</span><br><span class="line">    ~<span class="built_in">ExportData</span>() &#123;</span><br><span class="line">        <span class="keyword">if</span> (factory) &#123;</span><br><span class="line">            <span class="keyword">delete</span> factory;</span><br><span class="line">            factory = <span class="literal">nullptr</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">Export</span><span class="params">(<span class="type">const</span> std::string &amp;data)</span> </span>&#123;</span><br><span class="line">        IExport *e = factory-&gt;<span class="built_in">newExport</span>();</span><br><span class="line">        e-&gt;<span class="built_in">Export</span>(data);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    IExportFactory *factory;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">ExportData <span class="title">ed</span><span class="params">(<span class="keyword">new</span> ExportXmlFactory)</span></span>;</span><br><span class="line">    ed.<span class="built_in">Export</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将工厂传递给需要的对象，又工厂去创建对象，传入不同的工厂就可以创建不同的对象</p>
+<h3 id="抽象工厂"><a href="#抽象工厂" class="headerlink" title="抽象工厂"></a>抽象工厂</h3><p>提供一个接口，让该接口负责创建一系列“相关或者相互依赖的对象”，无需指定它们具体的类</p>
+<h4 id="背景-4"><a href="#背景-4" class="headerlink" title="背景"></a>背景</h4><p>如果业务涉及的类越来越多，使用工厂方法每一个子类都需要对应一个工厂，太复杂</p>
+<p>业务中需要创建口罩、防毒面具、防护服这三种产品，而每一种产品有包含高端和低端两类，按照工厂方法模式的解决方案需要创建六个工厂</p>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="C:\Users\gnezd\AppData\Roaming\Typora\typora-user-images\image-20230318154654152.png"
+                      alt="image-20230318154654152"
+                ></p>
+<p>可以对类进行分类，将口罩分为高端以及低端，每组中的不同产品，由同一个工厂类的不同方法创建</p>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="C:\Users\gnezd\AppData\Roaming\Typora\typora-user-images\image-20230318154804016.png"
+                      alt="image-20230318154804016"
+                ></p>
+<p>代码实现简化为有口罩和防护服两个抽象接口，分别拥有高端和低端两个实现类</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 产品</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">IMask</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">showMask</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LowMask</span> : <span class="keyword">public</span> IMask &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">showMask</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;低端口罩&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">HighMask</span> : <span class="keyword">public</span> IMask &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">showMask</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;高端口罩&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ISuit</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">showSuit</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LowSuit</span> : <span class="keyword">public</span> ISuit &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">showSuit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;低端防护服&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">HighSuit</span> : <span class="keyword">public</span> ISuit &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">showSuit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;高端防护服&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 工厂</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">IFactory</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> IMask* <span class="title">createMask</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> ISuit* <span class="title">createSuit</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LowFactory</span> : <span class="keyword">public</span> IFactory &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> IMask* <span class="title">createMask</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        IMask *mask = <span class="keyword">new</span> <span class="built_in">LowMask</span>();</span><br><span class="line">        <span class="keyword">return</span> mask;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> ISuit* <span class="title">createSuit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ISuit* suit = <span class="keyword">new</span> <span class="built_in">LowSuit</span>();</span><br><span class="line">        <span class="keyword">return</span> suit;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">HightFactory</span> : <span class="keyword">public</span> IFactory &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> IMask* <span class="title">createMask</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        IMask* mask = <span class="keyword">new</span> <span class="built_in">HighMask</span>();</span><br><span class="line">        <span class="keyword">return</span> mask;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> ISuit* <span class="title">createSuit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ISuit* suit = <span class="keyword">new</span> <span class="built_in">HighSuit</span>();</span><br><span class="line">        <span class="keyword">return</span> suit;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    IFactory* factory1 = <span class="keyword">new</span> <span class="built_in">LowFactory</span>();</span><br><span class="line">    IFactory* factory2 = <span class="keyword">new</span> <span class="built_in">HightFactory</span>();</span><br><span class="line"></span><br><span class="line">    IMask *mask1 = factory1-&gt;<span class="built_in">createMask</span>();</span><br><span class="line">    IMask *mask2 = factory2-&gt;<span class="built_in">createMask</span>();</span><br><span class="line">    ISuit *suit1 = factory1-&gt;<span class="built_in">createSuit</span>();</span><br><span class="line">    ISuit *suit2 = factory2-&gt;<span class="built_in">createSuit</span>();</span><br><span class="line"></span><br><span class="line">    mask1-&gt;<span class="built_in">showMask</span>();</span><br><span class="line">    mask2-&gt;<span class="built_in">showMask</span>();</span><br><span class="line">    suit1-&gt;<span class="built_in">showSuit</span>();</span><br><span class="line">    suit2-&gt;<span class="built_in">showSuit</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>也就是说将产品分类，然后不同类有不同的工厂，在工厂里面生产不同的商品</p>
+<h4 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h4><p>简单工厂模式：</p>
+<p>简单工厂模式有唯一的工厂类，工厂类的创建方法根据传入的参数做<strong>if-else条件判断</strong>，决定最终创建什么样的产品对象</p>
+<p>（需要修改代码，违法了开闭原则）</p>
+<p>工厂方法模式：</p>
+<p>工厂方法模式由多个工厂类实现工厂接口，利用多态来创建不同的产品对象，从而<strong>避免了冗长的if-else条件判断</strong></p>
+<p>抽象工厂模式：</p>
+<p>抽象工厂模式把产品子类进行分组，同组中的不同产品由同一个工厂子类的不同方法负责创建，从而<strong>减少了工厂子类的数量</strong></p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    
+<div class="article-copyright-info-container">
+    <ul class="copyright-info-content">
+        <li class="post-title">
+            <span class="type">本文标题</span>：<span class="content">设计模式</span>
+        </li>
+        <li class="post-author">
+            <span class="type">本文作者</span>：<span class="content">dd</span>
+        </li>
+        <li class="post-time">
+            <span class="type">创建时间</span>：<span class="content">2023-04-30 18:38:18</span>
+        </li>
+        <li class="post-link">
+            <span class="type">本文链接</span>：<span class="content">2023/04/30/设计模式/</span>
+        </li>
+        <li class="post-license">
+            <span class="type">版权声明</span>：<span class="content">本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！</span>
+        </li>
+    </ul>
+    <div class="copy-copyright-info flex-center tooltip" data-content="复制版权信息" data-offset-y="-2px">
+        <i class="fa-solid fa-copy"></i>
+    </div>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"><i class="icon fas fa-hashtag"></i>设计模式</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                               rel="prev"
+                               href="/2023/05/10/Linux%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4/"
+                            >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                                <span class="title flex-center">
+                                <span class="post-nav-title-item text-ellipsis">Linux网络命令</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                            </a>
+                        </div>
+                    
+                    
+                </div>
+            
+
+            
+                <div class="comment-container">
+                    
+
+
+
+
+
+
+                </div>
+            
+        </div>
+
+        
+            <div class="pc-post-toc">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="nav-text">设计原则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E4%B8%80%E8%81%8C%E8%B4%A3"><span class="nav-text">单一职责</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E9%97%AD%E5%8E%9F%E5%88%99"><span class="nav-text">开闭原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8C%E6%B0%8F%E6%9B%BF%E6%8D%A2"><span class="nav-text">里氏替换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3%E9%9A%94%E7%A6%BB"><span class="nav-text">接口隔离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E5%80%92%E7%BD%AE"><span class="nav-text">依赖倒置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E5%90%88%E4%BC%98%E4%BA%8E%E7%BB%A7%E6%89%BF"><span class="nav-text">组合优于继承</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="nav-text">设计模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F"><span class="nav-text">单例模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E4%B8%80"><span class="nav-text">版本一</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E4%BA%8C"><span class="nav-text">版本二</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E4%B8%89"><span class="nav-text">版本三</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E5%9B%9B"><span class="nav-text">版本四</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E4%BA%94"><span class="nav-text">版本五</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E5%85%AD"><span class="nav-text">版本六</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95"><span class="nav-text">模板方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-text">背景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F"><span class="nav-text">观察者模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%83%8C%E6%99%AF-1"><span class="nav-text">背景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F"><span class="nav-text">策略模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%83%8C%E6%99%AF-2"><span class="nav-text">背景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95"><span class="nav-text">工厂方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%83%8C%E6%99%AF-3"><span class="nav-text">背景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82"><span class="nav-text">抽象工厂</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%83%8C%E6%99%AF-4"><span class="nav-text">背景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB"><span class="nav-text">区别</span></a></li></ol></li></ol></li></ol>
+    </div>
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom border-box">
+            
+<footer class="footer border-box">
+    <div class="border-box website-info-box default">
+        
+            <div class="copyright-info info-item default">
+                &copy;&nbsp;<span>2023</span>&nbsp;-&nbsp;2023
+                
+                    &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">dd</a>
+                
+            </div>
+
+            <div class="theme-info info-item default">
+                由&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.7.0</a>
+            </div>
+
+            
+
+            
+                <div class="deploy-info info-item default">
+                    
+                    <a target="_blank" rel="nofollow" href="https://github.com/">
+                        
+                        本站由 <span class="tooltip" data-content="GitHub Pages"><img src="/images/deploy-provider/github.png"></span> 提供部署服务
+                        
+                    </a>
+                    
+                </div>
+            
+        
+
+        <div class="count-item info-item default">
+            
+
+            
+                <span class="count-box border-box uv">
+                    <span class="item-type border-box">访问人数</span>
+                    <span class="item-value border-box uv" id="busuanzi_value_site_uv"></span>
+                </span>
+            
+
+            
+                <span class="count-box border-box pv">
+                    <span class="item-type border-box">总访问量</span>
+                    <span class="item-value border-box pv" id="busuanzi_value_site_pv"></span>
+                </span>
+            
+        </div>
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    <!-- post tools -->
+    
+        <div class="post-tools">
+            <div class="post-tools-container border-box">
+    <ul class="tools-list border-box">
+        <!-- PC TOC show toggle -->
+        
+            <li class="tools-item flex-center toggle-show-toc">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        <!-- PC go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        
+            <li class="tools-item toggle-show-toc-tablet flex-center">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        
+
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <!-- image mask -->
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    <!-- local search -->
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- tablet toc -->
+    
+        <div class="tablet-post-toc-mask">
+            <div class="tablet-post-toc">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="nav-text">设计原则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E4%B8%80%E8%81%8C%E8%B4%A3"><span class="nav-text">单一职责</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E9%97%AD%E5%8E%9F%E5%88%99"><span class="nav-text">开闭原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8C%E6%B0%8F%E6%9B%BF%E6%8D%A2"><span class="nav-text">里氏替换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3%E9%9A%94%E7%A6%BB"><span class="nav-text">接口隔离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E5%80%92%E7%BD%AE"><span class="nav-text">依赖倒置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E5%90%88%E4%BC%98%E4%BA%8E%E7%BB%A7%E6%89%BF"><span class="nav-text">组合优于继承</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="nav-text">设计模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F"><span class="nav-text">单例模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E4%B8%80"><span class="nav-text">版本一</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E4%BA%8C"><span class="nav-text">版本二</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E4%B8%89"><span class="nav-text">版本三</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E5%9B%9B"><span class="nav-text">版本四</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E4%BA%94"><span class="nav-text">版本五</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E5%85%AD"><span class="nav-text">版本六</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95"><span class="nav-text">模板方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-text">背景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F"><span class="nav-text">观察者模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%83%8C%E6%99%AF-1"><span class="nav-text">背景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F"><span class="nav-text">策略模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%83%8C%E6%99%AF-2"><span class="nav-text">背景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95"><span class="nav-text">工厂方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%83%8C%E6%99%AF-3"><span class="nav-text">背景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82"><span class="nav-text">抽象工厂</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%83%8C%E6%99%AF-4"><span class="nav-text">背景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB"><span class="nav-text">区别</span></a></li></ol></li></ol></li></ol>
+    </div>
+</div>
+
+            </div>
+        </div>
+    
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/dark-light-toggle.js"></script>
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/code-block.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/lazyload.js"></script>
+
+
+<div class="post-scripts pjax">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/post-helper.js"></script>
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/libs/anime.min.js"></script>
+        
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/toc.js"></script>
+        
+    
+    
+    
+</div>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            KEEP.refresh();
+        });
+    });
+</script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="dd">
+    
+    <title>
+        
+            MySQL常用关键字实现原理 |
+        
+        dd&#39;s things
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/regular.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/solid.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/brands.min.css">
+    
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN","path":"search.json"}
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066cc","logo":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp","favicon":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp","avatar":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/avatar.11yw6gp0tnrk.webp","font_size":null,"font_family":null,"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"header_transparent":true,"background_img":"/images/bg.svg","description":"talk is cheap, show you the code.","font_color":null,"hitokoto":false},"scroll":{"progress_bar":true,"percent":true}},"local_search":{"enable":true,"preload":true},"code_block":{"tools":{"enable":true,"style":"mac"},"highlight_theme":"default"},"side_tools":{},"pjax":{"enable":true},"lazyload":{"enable":true},"comment":{"enable":false,"use":"valine","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":null,"github_admins":null,"repository":null,"client_id":null,"client_secret":null,"proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.8"},"waline":{"server_url":null,"reaction":false,"version":2}},"post":{"author_label":{"enable":false,"auto":true,"custom_label_list":["Trainee","Engineer","Architect"]},"word_count":{"enable":true,"wordcount":true,"min2read":true},"img_align":"center","copyright_info":true},"website_count":{"busuanzi_count":{"enable":true,"site_uv":true,"site_pv":true,"page_pv":true}},"version":"3.7.0"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <i class="pjax-progress-icon fas fa-circle-notch fa-spin"></i>
+    
+</div>
+
+
+<main class="page-container border-box">
+
+    <!-- home first screen  -->
+    
+
+    <!-- page content -->
+    <div class="page-main-content border-box">
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp">
+                </a>
+            
+            <a class="site-name" href="/">
+               dd&#39;s things
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                标签
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">标签</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle border-box">
+
+            <div class="main-content border-box">
+
+                
+
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+
+        <div class="article-content-container border-box">
+
+            <div class="article-title">
+                <span class="title-hover-animation">MySQL常用关键字实现原理</span>
+            </div>
+
+            
+                <div class="article-header border-box">
+                    
+                        <div class="avatar-box border-box">
+                            <img src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/avatar.11yw6gp0tnrk.webp">
+                        </div>
+                    
+                    <div class="info-box">
+                        <div class="author">
+                            <span class="name">dd</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info-container border-box post">
+    <div class="article-meta-info border-box">
+        
+
+
+        
+            
+                <span class="meta-info-item article-date">
+                    <i class="icon fa-regular fa-calendar-plus"></i>&nbsp;
+                    <span class="pc">2023-07-10 18:52:55</span>
+                    <span class="mobile">2023-07-10 18:52</span>
+                </span>
+            
+
+            
+                <span class="meta-info-item article-update-date">
+                    <i class="icon fas fa-file-pen"></i>&nbsp;
+                    <span class="pc">2023-08-05 18:57:16</span>
+                </span>
+            
+        
+
+        
+            <span class="meta-info-item article-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul>
+                    
+                            <li class="category-item">
+                                
+                                <a href="/categories/MySQL/">MySQL</a>
+                            </li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+            <span class="article-tag meta-info-item border-box">
+                <i class="icon fas fa-tags"></i>&nbsp;
+                <ul>
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/MySQL/">MySQL</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+        
+            <span class="meta-info-item article-wordcount">
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>4.1k 字</span>
+            </span>
+        
+        
+            <span class="meta-info-item article-min2read">
+                <i class="icon fas fa-clock"></i>&nbsp;<span>14 分钟</span>
+            </span>
+        
+        
+            <span class="meta-info-item article-pv">
+                <i class="icon fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    </div>
+
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content keep-markdown-body">
+                
+
+                <h2 id="group-by"><a href="#group-by" class="headerlink" title="group by"></a>group by</h2><p>MySQL中group by实现方式有三种：松散索引、紧凑索引、临时文件。其中松散索引和紧凑索引是利用现有的索引来完成，临时文件是在完全无法使用索引的场景下使用的</p>
+<h3 id="松散索引"><a href="#松散索引" class="headerlink" title="松散索引"></a>松散索引</h3><p>当MySQL完全利用索引扫描实现GROUP BY时，并<strong>不需要扫描所有满足条件的索引键</strong>即可完成操作得出结果</p>
+<p><strong>举例：</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> index idx_gid_uid_gc</span><br><span class="line"><span class="keyword">on</span> group_message(group_id,user_id,gmt_create);</span><br><span class="line"></span><br><span class="line">EXPLAIN <span class="keyword">SELECT</span> user_id,<span class="built_in">max</span>(gmt_create) </span><br><span class="line"><span class="keyword">FROM</span> group_message </span><br><span class="line"><span class="keyword">WHERE</span> group_id <span class="operator">&lt;</span> <span class="number">10</span> </span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> group_id,user_id\G</span><br><span class="line">只列重点：</span><br><span class="line"></span><br><span class="line"><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span> <span class="number">1.</span> <span class="type">row</span> <span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span></span><br><span class="line"></span><br><span class="line">key: idx_gid_uid_gc </span><br><span class="line"></span><br><span class="line">Extra: <span class="keyword">Using</span> <span class="keyword">where</span>; <span class="keyword">Using</span> index <span class="keyword">for</span> <span class="keyword">group</span><span class="operator">-</span><span class="keyword">by</span> </span><br></pre></td></tr></table></figure>
+
+<p>Extra 信息中有信息显示<strong>“Using index for group-by</strong>”，表示使用松散索引扫描实现GROUP BY 操作</p>
+<p><strong>利用松散索引实现GROUP BY 条件：</strong></p>
+<ul>
+<li>GROUP BY条件字段必须在同一个索引中最前面的连续位置（最左前缀原则）</li>
+<li>在使用GROUP BY的时候只能使用MAX或MIN这两个聚合函数（由于索引的有序性只需要扫描到一条就可以了，不需要扫描全部）</li>
+<li>如果引用到了该索引中GROUP BY条件之外的字段条件，必须以常量形式存储（保证查询的准确性和索引的有效性）<ul>
+<li>当在查询中提供非常量的条件值时，数据库无法通过直接访问索引来确定匹配的行，而可能需要扫描整个数据表来找到符合条件的行</li>
+</ul>
+</li>
+</ul>
+<p>比如有一个联合索引包含order_id、customer_id、order_date 和 total_amount</p>
+<p>SQL语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> customer_id, <span class="built_in">SUM</span>(total_amount) <span class="keyword">as</span> total_sum</span><br><span class="line"><span class="keyword">FROM</span> orders</span><br><span class="line"><span class="keyword">WHERE</span> order_date <span class="operator">&gt;=</span> DATE_SUB(NOW(), <span class="type">INTERVAL</span> <span class="number">1</span> WEEK)</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> customer_id</span><br><span class="line"><span class="keyword">HAVING</span> total_sum <span class="operator">&gt;</span> <span class="number">100</span>;</span><br></pre></td></tr></table></figure>
+
+<p>order_date 字段作为 WHERE 条件的限制，由于 order_date 不是 GROUP BY 条件之一，它属于 GROUP BY 条件之外的字段条件</p>
+<p>此时，如果我们以非常量形式提供条件值，比如使用一个变量来表示查询的起始日期，那么数据库无法通过直接访问索引来确定匹配的行，而可能需要扫描整个数据表来找到符合条件的行。这样会导致查询效率低下</p>
+<p>因此，在这种情况下，我们需要将条件值限制为常量形式，如使用具体的日期值或函数表达式来表示。这样，数据库可以直接通过索引定位到满足条件的数据行，提高查询性能</p>
+<p><strong>松散索引扫描的效率比较高：</strong></p>
+<p>因为不需要扫描所有满足条件的行，可以提前返回</p>
+<h3 id="紧凑索引"><a href="#紧凑索引" class="headerlink" title="紧凑索引"></a>紧凑索引</h3><p>在扫描索引时读取所有满足条件的索引键，然后再根据读取的数据完成GROUP BY操作得到相应的结果</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN <span class="keyword">SELECT</span> <span class="built_in">max</span>(gmt_create) </span><br><span class="line"><span class="keyword">FROM</span> group_message </span><br><span class="line"><span class="keyword">WHERE</span> group_id <span class="operator">=</span> <span class="number">2</span> </span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> user_id\G</span><br><span class="line">只列重点：</span><br><span class="line"></span><br><span class="line"><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span> <span class="number">1.</span> <span class="type">row</span> <span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span></span><br><span class="line"></span><br><span class="line">key: idx_gid_uid_gc</span><br><span class="line"></span><br><span class="line">Extra: <span class="keyword">Using</span> <span class="keyword">where</span>; <span class="keyword">Using</span> index</span><br></pre></td></tr></table></figure>
+
+<p>执行计划的 Extra 信息中已经没有“Using index for group-by”了，但并不是说 MySQL 的 GROUP BY 操作并不是通过索引完成的，只不过是需要访问 WHERE 条件所限定的所有索引键信息之后才能得出结果</p>
+<p>MySQL Query Optimizer 首先会选择尝试通过松散索引扫描来实现 GROUP BY 操作， 当发现某些情况无法满足松散索引扫描实现 GROUP BY 的要求之后，才会尝试通过紧凑索引扫描来实现</p>
+<p>当 GROUP BY 条件字段并不连续或者不是索引前缀部分的时候，MySQL Query Optimizer 无法使用松散索引扫描，因为缺失的索引键信息无法得到。但是， 如果 Query 语句中存在一个常量值来引用缺失的索引键，因为常量填充了搜索关键字中的“差距”，可以形成完整的索引前缀。这些索引前缀可以用于索引查找。那么此时mysql的执行过程为先根据where语句进行一次选择，对选出来的结果集，可以利用索引。这种方式，从整体上来说，group by并没有利用索引，但是从过程来说，在选出的结果中利用了索引，这种方式就是紧凑索引</p>
+<h3 id="临时表"><a href="#临时表" class="headerlink" title="临时表"></a>临时表</h3><p>当 MySQL Query Optimizer 无法找到合适的索引可以利用的时候，就不得不先读取需要的数据，然后通过临时表和排序来完成 GROUP BY 操作</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">XPLAIN <span class="keyword">SELECT</span> <span class="built_in">max</span>(gmt_create) <span class="keyword">FROM</span> group_message <span class="keyword">WHERE</span> group_id <span class="operator">&gt;</span> <span class="number">1</span> <span class="keyword">and</span> group_id <span class="operator">&lt;</span> <span class="number">10</span> <span class="keyword">GROUP</span> <span class="keyword">BY</span> user_id\G</span><br><span class="line">只列重点：</span><br><span class="line"></span><br><span class="line"><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span> <span class="number">1.</span> <span class="type">row</span> <span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span></span><br><span class="line"></span><br><span class="line">key: idx_gid_uid_gc</span><br><span class="line"></span><br><span class="line">Extra: <span class="keyword">Using</span> <span class="keyword">where</span>; <span class="keyword">Using</span> index; <span class="keyword">Using</span> temporary; <span class="keyword">Using</span> filesort</span><br></pre></td></tr></table></figure>
+
+<p>采用哈希算法进行group by将相同的数值存放在一起，快速得到分组的结果，之后再进行排序，但是内存消耗会比较大</p>
+<ul>
+<li>哈希表需要分配内存空间存储分组结果</li>
+<li>哈希冲突的时候需要额外的内存空间存储冲突的值</li>
+</ul>
+<p>因此如果数据量太大，可以使用 SQL_BIG_RESULT 这个hint，来告诉优化器直接使用排序算法（归并排序）得到 group by 的结果</p>
+<h3 id="优化思路"><a href="#优化思路" class="headerlink" title="优化思路"></a>优化思路</h3><ul>
+<li>尽可能让 MySQL 可以利用索引来完成 GROUP BY 操作，最好是松散索引扫描的方式</li>
+<li>当无法使用索引完成 GROUP BY 的时候，由于要使用到临时表且需要 filesort，所以我们必须要有足够的 sort_buffer_size 来供 MySQL 排序的时候使用，而且尽量不要进行大结果集的 GROUP BY 操作，因为如果超出系统设置的临时表大小的时候会出现将临时表数据 copy 到磁盘上面再进行操作，这时候的排序分组操作性能将是成数量级的下降</li>
+<li>如果对 group by 语句的结果没有排序要求，要在语句后面加 order by null</li>
+</ul>
+<h2 id="JOIN"><a href="#JOIN" class="headerlink" title="JOIN"></a>JOIN</h2><h3 id="JOIN类型"><a href="#JOIN类型" class="headerlink" title="JOIN类型"></a>JOIN类型</h3><ul>
+<li>INNER JOIN：将两个表中符合条件的行组合在一起。返回的结果集只包含满足连接条件的行，也就是<strong>两个表中都存在的行</strong></li>
+<li>LEFT JOIN：返回<strong>左表中所有行以及符合条件的右表中的行</strong>。如果右表中没有匹配的行则用NULL填充</li>
+<li>RIGHT JOIN：返回<strong>右表中所有行以及符合条件的左表中的行</strong>。如果左表中没有匹配的行则用NULL填充</li>
+<li>FULL OUTER JOIN：返回<strong>左表和右表中所有行</strong>，如果一个表中没有匹配的行，则用NULL填充</li>
+<li>CROSS JOIN：返回<strong>两个表中所有可能的组合，</strong>也就是第一个表的每一行和第二个表的每一行进行组合（笛卡尔积）</li>
+</ul>
+<h3 id="JOIN算法"><a href="#JOIN算法" class="headerlink" title="JOIN算法"></a>JOIN算法</h3><h4 id="Netsted-Loop-Join算法（NLJ）"><a href="#Netsted-Loop-Join算法（NLJ）" class="headerlink" title="Netsted-Loop Join算法（NLJ）"></a>Netsted-Loop Join算法（NLJ）</h4><p>两张表的user_code都是索引</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> u.`name`, u.user_code, o.order_name <span class="keyword">FROM</span> `<span class="keyword">user</span>` u <span class="keyword">JOIN</span> `<span class="keyword">order</span>` o <span class="keyword">ON</span> u.user_code <span class="operator">=</span> o.user_code;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>从order中读入一行记录</li>
+<li>在记录中取出user_code字段到user中查找</li>
+<li>user表根据索引找到满足条件的行字段，和上面的记录组成一行</li>
+<li>重复1~3，直到user表遍历结束</li>
+</ol>
+<p>从一个表中取出一行，然后在另一个表中扫描所有行，查找与之匹配的行</p>
+<p>时间复杂度：O(M * N)</p>
+<p><strong>为什么需要小表驱动大表：</strong></p>
+<p>假设被驱动表的行数是M。 每次在被驱动表查一行数据， 需要先搜索索引a， 再搜索主键索引。每次搜索一棵树近似复杂度是logM， 所以在被驱动表上查一行的时间复杂度是 2∗logM</p>
+<p>假设驱动表的行数是N， 执行过程就要扫描驱动表N行， 然后对于每一行， 到被驱动表上匹配一次。因此整个执行过程， 近似复杂度是N * 2 * logM</p>
+<p>N对扫描行数的影响更大， 因此应该让小表来做驱动表</p>
+<h4 id="Block-Netsted-Loop-Join算法（BNL）"><a href="#Block-Netsted-Loop-Join算法（BNL）" class="headerlink" title="Block Netsted-Loop Join算法（BNL）"></a>Block Netsted-Loop Join算法（BNL）</h4><p>两张表的user_code都没有索引</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN <span class="keyword">SELECT</span> u.`name`, u.user_code, o.order_name <span class="keyword">FROM</span> `<span class="keyword">user</span>` u <span class="keyword">JOIN</span> `<span class="keyword">order</span>` o <span class="keyword">ON</span> u.user_code <span class="operator">=</span> o.user_code</span><br></pre></td></tr></table></figure>
+
+<p>explain时Extral列会出现Using join buffer (Block Nested Loop)</p>
+<ol>
+<li>从user表中读入name,user_code字段数据存放到线程内存join_buffer中</li>
+<li>扫描order表，将order表中的每一行取出和join_buffer中的数据做对比，满足join条件的作为结果集的一部分返回</li>
+</ol>
+<p>Join Buffer是线程内存，在查询结束后会是否。大小有限制，默认是256K，当不够存放数据时会分段查询（也就是在user表中取出一部分，扫描order表，然后继续从user表中取出一部分，扫描order表……）</p>
+<p>时间复杂度：O（M + M * N）</p>
+<p><strong>没有索引时优化的NLJ算法：</strong></p>
+<ul>
+<li>减少磁盘IO与在内存中操作：传统的 NLJ 算法在每次比较时需要从磁盘读取内部表的一行数据。而 BNL 算法将内部表分成多个块，并且将一个块的数据加载到内存，这样就可以减少频繁的磁盘 I&#x2F;O 操作，提高查询效率</li>
+<li>适应内存限制：当内存有限时，BNL 算法可以根据可用内存大小灵活调整块的大小，以适应内存限制。这使得 BNL 算法更具可扩展性，可以在不同的硬件配置下工作</li>
+<li>减少比较次数：BNL 算法通过将内部表分成多个块，每次只加载一个块进行比较，减少了比较的次数<ul>
+<li>数据分块：BNL 算法将内部表划分为多个块，并逐个加载到内存中进行处理。每次只加载一个块的数据，并与外部表进行比较。这样可以避免一次性加载整个内部表并与外部表的每一行进行比较，从而减少了比较次数</li>
+<li>提前结束比较：在 BNL 算法中，如果已经找到了与外部表一行匹配的内部表行，就可以提前结束当前块的比较过程。因为在当前块内，已经找到了匹配的行，后续的比较不再需要执行。这样可以节省计算资源，进一步减少比较次数</li>
+</ul>
+</li>
+</ul>
+<h4 id="Hash-Join"><a href="#Hash-Join" class="headerlink" title="Hash Join"></a>Hash Join</h4><p>MySQL8.0.20开始使用Hash Join替代BNL算法</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> given_name,country_name <span class="keyword">FROM</span> persons <span class="keyword">JOIN</span> countries <span class="keyword">ON</span> persons.country_id <span class="operator">=</span> countries.country_id;</span><br></pre></td></tr></table></figure>
+
+<p><strong>hash join分为两个阶段：</strong></p>
+<ul>
+<li>build构建阶段：使用Join字段作为哈希表key，在内存中构建Hash表（会选择结果集比较小的去构建（以字节为单位进行比较）</li>
+<li>probe探测阶段：逐行遍历被驱动表，计算join条件的hash值并在hash表中查找，如果匹配则记录下来，直到被驱动表遍历完成</li>
+</ul>
+<p><strong>内存****中hash表的大小是由参数join_buffer_size控制的如果构建的hash表内存大于可用内存怎么办？</strong></p>
+<p>服务器会将多余的构建写入磁盘的多个文件中，并且数值文件的数量，确保最大的文件大小和join_buffer_size一致</p>
+<p>每行数据写入哪个块文件是通过计算 join 属性的哈希来确定的。但是此时使用的哈希函数与内存中生成阶段使用的哈希函数不同</p>
+<p>在探测阶段，服务器对于另一张表每一行数据使用同样的hash算法进行分区。这样就可以确定两个输入之间的匹配行将位于同一对文件中</p>
+<p>探测阶段完成后，开始从磁盘读取文件。首先会将build构建阶段的第一个文件加载到内存中哈希表中（解释了为什么希望最大的文件大小与内存一致），接着读取在探测阶段生成的文件，在内存哈希表中进行匹配</p>
+<p>因此可以得出对两个操作使用相同的哈希函数，那么在将构建文件加载到哈希表中时，我们会得到一个非常糟糕的哈希表，因为同一个文件中的所有行都将哈希为相同的值</p>
+<p>时间复杂度：O（M + N）</p>
+<p>为什么替换BNL：</p>
+<ul>
+<li>笛卡尔积问题：当两个表进行连接操作时，如果没有合适的连接谓词或者数据分布不均匀，BNL 可能会生成巨大的笛卡尔积结果，导致性能低下。而 Hash Join 则可以通过哈希算法将连接条件相符的行分配到同一个哈希桶中，避免了笛卡尔积问题</li>
+</ul>
+<h3 id="优化思路-1"><a href="#优化思路-1" class="headerlink" title="优化思路"></a>优化思路</h3><p>NLJ算法优化：小表驱动大表，在join的时候如果明确知道哪张表是小表时可以使用straight_join写法固定连接驱动方式</p>
+<p>BNL算法优化：</p>
+<ul>
+<li>给被驱动表的join字段加上索引，把BNL算法转成NLJ算法</li>
+<li>无法设置索引的情况可以通过设置join_buffer_size参数来控制Join Buffer的大小，以减少分段查询次数</li>
+</ul>
+<p>Hash Join算法优化：增加 join_buffer_size值避免生成文件</p>
+<h2 id="in-exists"><a href="#in-exists" class="headerlink" title="in &amp; exists"></a>in &amp; exists</h2><h3 id="in"><a href="#in" class="headerlink" title="in"></a>in</h3><p>in执行流程：查询子查询的表且内外表有关联时，先执行内层表的子查询，然后将内表和外表做一个笛卡尔积，然后按照条件进行筛选，得到结果集。所以相对内表比较小的时候，in的速度较快</p>
+<p><strong>in列表的处理：</strong></p>
+<ul>
+<li>小列表：将列表中的值硬编码为条件，通过or运算符连接起来</li>
+<li>大列表：看成是范围区间，比如in（a,b），会看成是[a,a]、[b,b]，方便后续进行范围查询操作</li>
+</ul>
+<p>重复值会自动提出</p>
+<p>参数即使乱序也会重新排序</p>
+<p>MySQL 在执行 IN 运算符时有以下几种实现方式：</p>
+<ul>
+<li>线性搜索：当IN列表比较小或没有合适的所有时，MySQL会逐个比较列的值</li>
+<li>排序和二分查找：如果 IN 列表是有序的，并且存在合适的索引，MySQL 可以通过排序列表并使用二分查找算法来快速定位匹配的值</li>
+<li>哈希表查找：对于大型的 IN 列表，MySQL 可以将列表中的值构建成一个哈希表，并使用哈希函数将列的值映射到哈希表中的桶。然后，MySQL 可以通过查找哈希表来判断值是否存在，从而加快查询速度</li>
+</ul>
+<p><strong>系统变量eq_range_index_dive_limit对IN子句的影响</strong></p>
+<p>MySQL优化器需要去分析一下如何执行查询，需要判断键值在范围区间的记录共有多少条，然后通过一定方式计算出成本，与全表扫描的成本相对比，选取成本更低的那种方式执行查询</p>
+<p>对于包含IN子句条件的查询来说，需要依次分析一下每一个范围区间中的记录数量是多少。MySQL优化器针对IN子句对应的范围区间的多少而指定了不同的策略：</p>
+<ul>
+<li>如果IN子句对应的范围区间比较少，那么将率先去访问一下存储引擎，看一下每个范围区间中的记录有多少条（如果范围区间的记录比较少，那么统计结果就是精确的，反之会采用一定的手段计算一个模糊的值），这种在查询真正执行前优化器就率先访问索引来计算需要扫描的索引记录数量的方式称之为index dive</li>
+<li>如果IN子句对应的范围区间比较多，这样就不能采用index dive的方式去真正的访问二级索引idx_key1（因为那将耗费大量的时间），而是需要采用之前在背地里产生的一些统计数据去估算匹配的二级索引记录有多少条（很显然根据统计数据去估算记录条数比index dive的方式精确性差了很多）</li>
+</ul>
+<p>当范围区间个数小于eq_range_index_dive_limit时，将采用index dive的统计方式，否则将采用index statistic的统计方式</p>
+<h3 id="exists"><a href="#exists" class="headerlink" title="exists"></a>exists</h3><p>exists执行流程：指定一个子查询，检测行的存在。遍历循环外表，然后看外表中的记录有没有和内表的数据一样的，匹配上就将结果放入结果集中</p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a class="link"   target="_blank" rel="noopener" href="https://phpmianshi.com/?id=154" >MySQL中GROUP BY的实现与优化<i class="fas fa-external-link-alt"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://juejin.cn/post/7224046762200154172" >MySQL——JOIN详解与优化<i class="fas fa-external-link-alt"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/102980603" >MySQL中包含IN子句的语句是怎样执行的<i class="fas fa-external-link-alt"></i></a></p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    
+<div class="article-copyright-info-container">
+    <ul class="copyright-info-content">
+        <li class="post-title">
+            <span class="type">本文标题</span>：<span class="content">MySQL常用关键字实现原理</span>
+        </li>
+        <li class="post-author">
+            <span class="type">本文作者</span>：<span class="content">dd</span>
+        </li>
+        <li class="post-time">
+            <span class="type">创建时间</span>：<span class="content">2023-07-10 18:52:55</span>
+        </li>
+        <li class="post-link">
+            <span class="type">本文链接</span>：<span class="content">2023/07/10/MySQL常用关键字实现原理/</span>
+        </li>
+        <li class="post-license">
+            <span class="type">版权声明</span>：<span class="content">本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！</span>
+        </li>
+    </ul>
+    <div class="copy-copyright-info flex-center tooltip" data-content="复制版权信息" data-offset-y="-2px">
+        <i class="fa-solid fa-copy"></i>
+    </div>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/tags/MySQL/"><i class="icon fas fa-hashtag"></i>MySQL</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                               rel="prev"
+                               href="/2023/08/06/%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/"
+                            >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                                <span class="title flex-center">
+                                <span class="post-nav-title-item text-ellipsis">哈希算法&amp;一致性哈希</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                               rel="next"
+                               href="/2023/07/10/%E6%85%A2SQL%E6%B2%BB%E7%90%86%E5%AE%9E%E6%88%98%E6%80%BB%E7%BB%93/"
+                            >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item text-ellipsis">慢SQL治理实战总结</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                                <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+            
+                <div class="comment-container">
+                    
+
+
+
+
+
+
+                </div>
+            
+        </div>
+
+        
+            <div class="pc-post-toc">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#group-by"><span class="nav-text">group by</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%BE%E6%95%A3%E7%B4%A2%E5%BC%95"><span class="nav-text">松散索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A7%E5%87%91%E7%B4%A2%E5%BC%95"><span class="nav-text">紧凑索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%B4%E6%97%B6%E8%A1%A8"><span class="nav-text">临时表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E6%80%9D%E8%B7%AF"><span class="nav-text">优化思路</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JOIN"><span class="nav-text">JOIN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JOIN%E7%B1%BB%E5%9E%8B"><span class="nav-text">JOIN类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JOIN%E7%AE%97%E6%B3%95"><span class="nav-text">JOIN算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Netsted-Loop-Join%E7%AE%97%E6%B3%95%EF%BC%88NLJ%EF%BC%89"><span class="nav-text">Netsted-Loop Join算法（NLJ）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Block-Netsted-Loop-Join%E7%AE%97%E6%B3%95%EF%BC%88BNL%EF%BC%89"><span class="nav-text">Block Netsted-Loop Join算法（BNL）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hash-Join"><span class="nav-text">Hash Join</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E6%80%9D%E8%B7%AF-1"><span class="nav-text">优化思路</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#in-exists"><span class="nav-text">in &amp; exists</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#in"><span class="nav-text">in</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#exists"><span class="nav-text">exists</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="nav-text">参考文章</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom border-box">
+            
+<footer class="footer border-box">
+    <div class="border-box website-info-box default">
+        
+            <div class="copyright-info info-item default">
+                &copy;&nbsp;<span>2023</span>&nbsp;-&nbsp;2023
+                
+                    &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">dd</a>
+                
+            </div>
+
+            <div class="theme-info info-item default">
+                由&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.7.0</a>
+            </div>
+
+            
+
+            
+                <div class="deploy-info info-item default">
+                    
+                    <a target="_blank" rel="nofollow" href="https://github.com/">
+                        
+                        本站由 <span class="tooltip" data-content="GitHub Pages"><img src="/images/deploy-provider/github.png"></span> 提供部署服务
+                        
+                    </a>
+                    
+                </div>
+            
+        
+
+        <div class="count-item info-item default">
+            
+
+            
+                <span class="count-box border-box uv">
+                    <span class="item-type border-box">访问人数</span>
+                    <span class="item-value border-box uv" id="busuanzi_value_site_uv"></span>
+                </span>
+            
+
+            
+                <span class="count-box border-box pv">
+                    <span class="item-type border-box">总访问量</span>
+                    <span class="item-value border-box pv" id="busuanzi_value_site_pv"></span>
+                </span>
+            
+        </div>
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    <!-- post tools -->
+    
+        <div class="post-tools">
+            <div class="post-tools-container border-box">
+    <ul class="tools-list border-box">
+        <!-- PC TOC show toggle -->
+        
+            <li class="tools-item flex-center toggle-show-toc">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        <!-- PC go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        
+            <li class="tools-item toggle-show-toc-tablet flex-center">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        
+
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <!-- image mask -->
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    <!-- local search -->
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- tablet toc -->
+    
+        <div class="tablet-post-toc-mask">
+            <div class="tablet-post-toc">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#group-by"><span class="nav-text">group by</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%BE%E6%95%A3%E7%B4%A2%E5%BC%95"><span class="nav-text">松散索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A7%E5%87%91%E7%B4%A2%E5%BC%95"><span class="nav-text">紧凑索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%B4%E6%97%B6%E8%A1%A8"><span class="nav-text">临时表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E6%80%9D%E8%B7%AF"><span class="nav-text">优化思路</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JOIN"><span class="nav-text">JOIN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JOIN%E7%B1%BB%E5%9E%8B"><span class="nav-text">JOIN类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JOIN%E7%AE%97%E6%B3%95"><span class="nav-text">JOIN算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Netsted-Loop-Join%E7%AE%97%E6%B3%95%EF%BC%88NLJ%EF%BC%89"><span class="nav-text">Netsted-Loop Join算法（NLJ）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Block-Netsted-Loop-Join%E7%AE%97%E6%B3%95%EF%BC%88BNL%EF%BC%89"><span class="nav-text">Block Netsted-Loop Join算法（BNL）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hash-Join"><span class="nav-text">Hash Join</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E6%80%9D%E8%B7%AF-1"><span class="nav-text">优化思路</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#in-exists"><span class="nav-text">in &amp; exists</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#in"><span class="nav-text">in</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#exists"><span class="nav-text">exists</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="nav-text">参考文章</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        </div>
+    
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/dark-light-toggle.js"></script>
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/code-block.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/lazyload.js"></script>
+
+
+<div class="post-scripts pjax">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/post-helper.js"></script>
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/libs/anime.min.js"></script>
+        
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/toc.js"></script>
+        
+    
+    
+    
+</div>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            KEEP.refresh();
+        });
+    });
+</script>
+
+
+
+
+</body>
+</html>

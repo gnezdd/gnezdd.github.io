@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="dd">
+    
+    <title>
+        
+            《高性能MySQL》读书笔记表的设计与管理 |
+        
+        dd&#39;s things
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/regular.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/solid.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/brands.min.css">
+    
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN","path":"search.json"}
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066cc","logo":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp","favicon":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp","avatar":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/avatar.11yw6gp0tnrk.webp","font_size":null,"font_family":null,"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"header_transparent":true,"background_img":"/images/bg.svg","description":"talk is cheap, show you the code.","font_color":null,"hitokoto":false},"scroll":{"progress_bar":true,"percent":true}},"local_search":{"enable":true,"preload":true},"code_block":{"tools":{"enable":true,"style":"mac"},"highlight_theme":"default"},"side_tools":{},"pjax":{"enable":true},"lazyload":{"enable":true},"comment":{"enable":false,"use":"valine","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":null,"github_admins":null,"repository":null,"client_id":null,"client_secret":null,"proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.8"},"waline":{"server_url":null,"reaction":false,"version":2}},"post":{"author_label":{"enable":false,"auto":true,"custom_label_list":["Trainee","Engineer","Architect"]},"word_count":{"enable":true,"wordcount":true,"min2read":true},"img_align":"center","copyright_info":true},"website_count":{"busuanzi_count":{"enable":true,"site_uv":true,"site_pv":true,"page_pv":true}},"version":"3.7.0"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <i class="pjax-progress-icon fas fa-circle-notch fa-spin"></i>
+    
+</div>
+
+
+<main class="page-container border-box">
+
+    <!-- home first screen  -->
+    
+
+    <!-- page content -->
+    <div class="page-main-content border-box">
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp">
+                </a>
+            
+            <a class="site-name" href="/">
+               dd&#39;s things
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                标签
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">标签</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle border-box">
+
+            <div class="main-content border-box">
+
+                
+
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+
+        <div class="article-content-container border-box">
+
+            <div class="article-title">
+                <span class="title-hover-animation">《高性能MySQL》读书笔记表的设计与管理</span>
+            </div>
+
+            
+                <div class="article-header border-box">
+                    
+                        <div class="avatar-box border-box">
+                            <img src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/avatar.11yw6gp0tnrk.webp">
+                        </div>
+                    
+                    <div class="info-box">
+                        <div class="author">
+                            <span class="name">dd</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info-container border-box post">
+    <div class="article-meta-info border-box">
+        
+
+
+        
+            
+                <span class="meta-info-item article-date">
+                    <i class="icon fa-regular fa-calendar-plus"></i>&nbsp;
+                    <span class="pc">2023-07-01 23:30:33</span>
+                    <span class="mobile">2023-07-01 23:30</span>
+                </span>
+            
+
+            
+                <span class="meta-info-item article-update-date">
+                    <i class="icon fas fa-file-pen"></i>&nbsp;
+                    <span class="pc">2023-08-05 18:57:16</span>
+                </span>
+            
+        
+
+        
+            <span class="meta-info-item article-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul>
+                    
+                            <li class="category-item">
+                                
+                                <a href="/categories/MySQL/">MySQL</a>
+                            </li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+            <span class="article-tag meta-info-item border-box">
+                <i class="icon fas fa-tags"></i>&nbsp;
+                <ul>
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+        
+            <span class="meta-info-item article-wordcount">
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>2.6k 字</span>
+            </span>
+        
+        
+            <span class="meta-info-item article-min2read">
+                <i class="icon fas fa-clock"></i>&nbsp;<span>9 分钟</span>
+            </span>
+        
+        
+            <span class="meta-info-item article-pv">
+                <i class="icon fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    </div>
+
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content keep-markdown-body">
+                
+
+                <h2 id="选择优化的数据类型"><a href="#选择优化的数据类型" class="headerlink" title="选择优化的数据类型"></a>选择优化的数据类型</h2><p>MySQL支持的数据类型非常多，选择正确的数据类型对于获得高性能至关重要</p>
+<p><strong>选择原则：</strong></p>
+<ul>
+<li><strong>更小的通常更好</strong>：尽量使用能够正确存储和表示数据的最小数据类型，占用的空间更少，处理需要的CPU周期更少</li>
+<li><strong>简单为好</strong>：简单的数据类型处理所需的CPU周期比较少<ul>
+<li>整型数据比字符型数据的比较操作代价更低，因为字符集和排序规则(collation)使字符型数据的比较更复杂</li>
+<li>将日期和时间存储为MySQL的内置类型而不是字符串类型</li>
+<li>用整型数据存储IP地址</li>
+</ul>
+</li>
+<li><strong>尽量避免存储****NULL</strong>：NULL的列使索引、索引统计和值比较都更复杂，且NULL的列会占用更多的存储空间<ul>
+<li>但是在调优时将NULL改为NOT NULL带来的性能提升比较小</li>
+</ul>
+</li>
+</ul>
+<p><strong>选择步骤：</strong></p>
+<ol>
+<li><strong>确定合适的大类型：</strong>数字、字符串、时间等</li>
+<li><strong>选择具体类型：</strong>MySQL数据类型很多可以存储相同类型的数据，但是在存储的值范围、精度、占据空间上有着不同</li>
+</ol>
+<h3 id="整数类型"><a href="#整数类型" class="headerlink" title="整数类型"></a>整数类型</h3><p>MySQL中整数有以下几种类型：</p>
+<ul>
+<li>TINYINT：8位，存储值范围：-2$$^7 $$~ 2$$^7$$-1</li>
+<li>SMALLINT：16位，存储值范围：-2$$^{15}  $$~ 2$$^{15} $$-1</li>
+<li>MEDIUMINT：24位，存储值范围：-2$$^{23}  $$~ 2$$^{23} $$-1</li>
+<li>INT：32位，存储值范围：-2$$^{31}  $$~ 2$$^{31} $$-1</li>
+<li>BIGINT：64位，存储值范围：-2$$^{63} $$~ 2$$^{63} $$-1</li>
+</ul>
+<p>整数类型有可选的UNSIGNED属性，表示不允许负值，这大致可以使正数的上限提高一倍。例如，TINYINT UNSIGNED可以存储的值的范围是0～255，而TINYINT的值的存储范围是-128～127</p>
+<p>不同的整数类型占据的空间是不同的，但是整数计算通常使用BIGINT，除了一些聚合函数</p>
+<p>同时MySQL可以为整数类型指定宽度，比如INT(11)，但是不会限制值的范围，依旧是32位，例如INT(11)和INT(20)是相同的，只是规定了MySQL的一些交互工具中用于显示字符的个数</p>
+<h3 id="实数类型"><a href="#实数类型" class="headerlink" title="实数类型"></a>实数类型</h3><p>MySQL中实数有以下几种类型：</p>
+<ul>
+<li>DECIMAL：提供精确类型</li>
+<li>FLOAT &amp; DOUBLE：不精确，是近似计算，前者占据4字节，后者占据8字节</li>
+</ul>
+<p>MySQL中我们可以选择不同的实数类型，但是浮点类型的内部计算是使用DOUBLE</p>
+<p>注意：<strong>DECIMAL由于精确计算需要额外的空间和计算成本，性能要求比较高</strong>。建议只在需要精确计算的时候才使用。同时对于一些大容量场景，可以考虑用BIGINT代替DECIMAL，将需要存储的货币单位根据小数的位数乘以相应的倍数即可。假设要存储财务数据并精确到万分之一分，则可以把所有金额乘以一百万，然后将结果存储在BIGINT里，这样可以同时避免浮点存储计算不精确和DECIMAL精确计算代价高的问题</p>
+<h3 id="字符串类型"><a href="#字符串类型" class="headerlink" title="字符串类型"></a>字符串类型</h3><p>MySQL支持多种字符串数据类型，每种类型还有许多变体。每个字符串列可以有自己的字符集和该字符集的排序规则集</p>
+<h4 id="VARCHAR-CHAR"><a href="#VARCHAR-CHAR" class="headerlink" title="VARCHAR &amp; CHAR"></a>VARCHAR &amp; CHAR</h4><p>在磁盘和内存中的存储方式在不同的存储引擎下是不同的，下面以InnoDB为准。同时同种存储引擎在内存中存储二者的方式可能和磁盘上存储方式不同</p>
+<h5 id="VARCHAR"><a href="#VARCHAR" class="headerlink" title="VARCHAR"></a>VARCHAR</h5><p>用于存储可变长度的字符串</p>
+<p><strong>会额外使用字节记录字符串的长度：</strong></p>
+<ul>
+<li>列的长度&lt;&#x3D;255字节：用1字节表示</li>
+<li>列的长度&gt;255字节：用2字节表示</li>
+</ul>
+<p><strong>优点：</strong>只使用必要的空间，所以比固定长度的类型更加节省空间</p>
+<p><strong>缺点：</strong>行是可变长度，在更新时可能会增长，会导致额外的工作。如果行的增长使原位置无法容纳更多内容，不同存储引擎处理方式不同。InnoDB可能需要分割页面来容纳行，其他存储引擎可能不在原数据位置更新数据</p>
+<p><strong>使用场景：</strong></p>
+<ul>
+<li>字符串列的最大长度远大于平均长度</li>
+<li>列的更新少</li>
+<li>使用类似UTF-8的复杂字符集，每个字符都用不同的字节数存储</li>
+</ul>
+<p><strong>varchar分配是否越多越好？比如使用varchar(5)和varchar(200)存储’hello’的空间开销是一样的，那么使用更短的列有什么优势？</strong></p>
+<p>较大的列会使用更多的内存，MySQL会在内部分配固定大小的内存块保存值，也就是按照最长的方式在内存中分配空间。比如排序是varchar(200)是按照200这个长度来进行的，不合理的长度会浪费空间。</p>
+<p>所以最合理的策略是<strong>按需分配</strong></p>
+<h5 id="CHAR"><a href="#CHAR" class="headerlink" title="CHAR"></a>CHAR</h5><p>是固定长度的，MySQL会为定义的字符串长度分配足够的空间。当存储CHAR值时，MySQL删除所有尾随空格。如果需要进行比较，值会用空格填充</p>
+<p><strong>使用场景：</strong></p>
+<ul>
+<li>所有值的长度几乎都相同的情况（比如用户密码的MD5值）</li>
+<li>经常修改的数据（不易出现碎片）</li>
+<li>非常短的列（varchar还需要额外的字节记录长度）</li>
+</ul>
+<h4 id="BLOB-TEXT"><a href="#BLOB-TEXT" class="headerlink" title="BLOB &amp; TEXT"></a>BLOB &amp; TEXT</h4><p>用于存储很大的数据，分别用于二进制存储与字符方式存储</p>
+<p>当BLOG &amp; TEXT的值太大是，InnoDB会使用外部存储区域进行存储，此时每个值在行内只需要记录外部存储区域的地址即可</p>
+<p>排序方式：只对列的最前max_sort_length字节排序，而不是整个字符串</p>
+<p>MySQL不能将BLOB和TEXT数据类型的完整字符串放入索引，也不能使用索引进行排序</p>
+<p>一般不建议使用BLOB或TEXT存储类似图像等数据，会导致表过大同时修改查询表这些操作变慢。一般是使用单独的对象数据存储，然后在表中跟踪对应的位置或文件名（类似文件存储在fastDFS中，然后在MySQL表中记录文件在FastDFS中的位置）</p>
+<h4 id="使用枚举代替字符串类型"><a href="#使用枚举代替字符串类型" class="headerlink" title="使用枚举代替字符串类型"></a>使用枚举代替字符串类型</h4><p>ENUM列可以存储一组预定义的不同字符串值，MySQL在存储枚举时用会整数进行表示，而不是字符串，使得占用空间压缩到1~2字节</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE enum_test(</span><br><span class="line">    e ENUM(<span class="string">&#x27;fish&#x27;</span>,<span class="string">&#x27;apple&#x27;</span>,<span class="string">&#x27;dog&#x27;</span>) NOT NULL</span><br><span class="line">);</span><br><span class="line">INSERT INTO enum_test(e) VALUES(<span class="string">&#x27;fish&#x27;</span>),(<span class="string">&#x27;dog&#x27;</span>),(<span class="string">&#x27;apple&#x27;</span>);</span><br><span class="line"></span><br><span class="line">mysql&gt; <span class="keyword">select</span> * from enum_test;                                                                                                                </span><br><span class="line">+-------+                                                                                                                                      </span><br><span class="line">| e     |                                                                                                                                      </span><br><span class="line">+-------+                                                                                                                                      </span><br><span class="line">| fish  |                                                                                                                                      </span><br><span class="line">| dog   |                                                                                                                                      </span><br><span class="line">| apple |                                                                                                                                      </span><br><span class="line">+-------+                                                                                                                                      </span><br><span class="line"><span class="number">3</span> rows in set (<span class="number">0.00</span> sec)                                                                                                                       </span><br><span class="line">                                                                                                                                               </span><br><span class="line">mysql&gt; <span class="keyword">select</span> e + <span class="number">0</span> from enum_test;                                                                                                            </span><br><span class="line">+-------+                                                                                                                                      </span><br><span class="line">| e + <span class="number">0</span> |                                                                                                                                      </span><br><span class="line">+-------+                                                                                                                                      </span><br><span class="line">|     <span class="number">1</span> |                                                                                                                                      </span><br><span class="line">|     <span class="number">3</span> |                                                                                                                                      </span><br><span class="line">|     <span class="number">2</span> |                                                                                                                                      </span><br><span class="line">+-------+                                                                                                                                      </span><br><span class="line"><span class="number">3</span> rows in set (<span class="number">0.00</span> sec) </span><br></pre></td></tr></table></figure>
+
+<p>enum字段是根据内部整数值排序的，而不是根据字符串</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; <span class="keyword">select</span> e from enum_test order by e;                                                                                                     </span><br><span class="line">+-------+                                                                                                                                      </span><br><span class="line">| e     |                                                                                                                                      </span><br><span class="line">+-------+                                                                                                                                      </span><br><span class="line">| fish  |                                                                                                                                      </span><br><span class="line">| apple |                                                                                                                                      </span><br><span class="line">| dog   |                                                                                                                                      </span><br><span class="line">+-------+                                                                                                                                      </span><br><span class="line"><span class="number">3</span> rows in set (<span class="number">0.00</span> sec)  </span><br></pre></td></tr></table></figure>
+
+<p>可以通过按照需要的顺序指定ENUM成员来解决这个问题。也可以在查询中使用FIELD()函数显式地指定排序顺序，但这会导致MySQL无法利用索引消除排序</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; <span class="keyword">select</span> e from enum_test order by FIELD(e,<span class="string">&#x27;apple&#x27;</span>,<span class="string">&#x27;dog&#x27;</span>,<span class="string">&#x27;fish&#x27;</span>);                                                                         </span><br><span class="line">+-------+                                                                                                                                      </span><br><span class="line">| e     |                                                                                                                                      </span><br><span class="line">+-------+                                                                                                                                      </span><br><span class="line">| apple |                                                                                                                                      </span><br><span class="line">| dog   |                                                                                                                                      </span><br><span class="line">| fish  |                                                                                                                                      </span><br><span class="line">+-------+                                                                                                                                      </span><br></pre></td></tr></table></figure>
+
+<p>MySQL将枚举值存储为整数，在查找时需要根据整数去获取对应的字符串。这一部分的开销通常可以被enum列的小尺寸所抵消</p>
+<p>使用时需要考虑的地方：</p>
+<ul>
+<li>enum值是否会过多</li>
+<li>enum值是否需要经常修改（会导致表经常变更）</li>
+</ul>
+<h3 id="日期和时间类型"><a href="#日期和时间类型" class="headerlink" title="日期和时间类型"></a>日期和时间类型</h3><p>MySQL提供了两种类型用于实现同时存储日期和时间</p>
+<h4 id="DATETIME"><a href="#DATETIME" class="headerlink" title="DATETIME"></a>DATETIME</h4><p>可以保存<strong>大范围</strong>的数值，从1000年到9999年，<strong>精度为1微秒</strong>。它以<strong>YYYYMMDDHHMMSS格式存储压缩成整数</strong>的日期和时间，且<strong>与时区无关</strong>。这需要<strong>8字节</strong>的存储空间</p>
+<p>可排序、无歧义</p>
+<h4 id="TIMESTAMP"><a href="#TIMESTAMP" class="headerlink" title="TIMESTAMP"></a>TIMESTAMP</h4><p>存储自<strong>1970年1月1日格林尼治标准时间(<strong><strong>GMT</strong></strong>)午夜以来经过的秒数</strong>——与UNIX时间戳相同。TIMESTAMP只使用<strong>4字节</strong>的存储空间，所以它的<strong>范围比DATETIME小得多：只能表示从1970年到2038年1月19日。</strong>时间戳显示的<strong>值依赖于时区</strong></p>
+<p>默认情况下，当插入&#x2F;更新一行记录时没有指定第一个TIMESTAMP列的值，MySQL会将该列的值设置为当前时间</p>
+<h4 id="使用时的考虑因素"><a href="#使用时的考虑因素" class="headerlink" title="使用时的考虑因素"></a>使用时的考虑因素</h4><ul>
+<li>都需要处理服务器和客户端上的时区问题</li>
+<li>TIMESTAMP会有2038年限制</li>
+<li>存储空间</li>
+<li>时间精度</li>
+</ul>
+<p>通过将日期和时间存储为UNIX纪元（即自1970年1月1日以来的秒数），以协调世界时(UTC)的形式，可避免MySQL处理的复杂性，这一做法越来越流行。使用带符号的32位INT，可以表达直到2038年的时间。使用无符号的32位INT，可以表达直到2106年的时间。如果使用64位，还可以超出这些范围</p>
+<h3 id="特殊数据类型"><a href="#特殊数据类型" class="headerlink" title="特殊数据类型"></a>特殊数据类型</h3><p>某些类型的数据并不直接对应于可用的内置类型。IPv4地址就是一个很好的例子。人们通常使用VARCHAR(15)列来存储IP地址。然而，它们实际上是32位无符号整数，而不是字符串。用小数点将地址分成四段的表示方法只是为了让人们阅读容易，所以应该将I P地址存储为无符号整数。MySQL提供了INET_ATON()和INET_NTOA()函数来在这两种表示形式之间进行转换。使用的空间从VARCHAR(15)的约16字节缩减到无符号32位整数的4字节。如果你担心数据库的可读性，不想继续使用函数查看行数据，请记住MySQL有视图，可以使用视图来简化数据查看的复杂性。</p>
+<h2 id="Schema设计陷阱"><a href="#Schema设计陷阱" class="headerlink" title="Schema设计陷阱"></a>Schema设计陷阱</h2><ul>
+<li>太多的列：服务器在转换行格式时会消耗过大的CPU</li>
+<li>太多的联接</li>
+<li>过度使用枚举</li>
+<li>警惕NULL值<ul>
+<li>上面已经讲过避免使用NULL</li>
+<li>当需要表示未知值时，不要太害怕使用NULL。在某些情况下，使用NULL比使用某个虚拟常数更好。避免使代码复杂化，引入bug。例如DATETIME设置为0000-00-00 00:00:00可能会导致一些问题</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    
+<div class="article-copyright-info-container">
+    <ul class="copyright-info-content">
+        <li class="post-title">
+            <span class="type">本文标题</span>：<span class="content">《高性能MySQL》读书笔记表的设计与管理</span>
+        </li>
+        <li class="post-author">
+            <span class="type">本文作者</span>：<span class="content">dd</span>
+        </li>
+        <li class="post-time">
+            <span class="type">创建时间</span>：<span class="content">2023-07-01 23:30:33</span>
+        </li>
+        <li class="post-link">
+            <span class="type">本文链接</span>：<span class="content">2023/07/01/表的设计与管理/</span>
+        </li>
+        <li class="post-license">
+            <span class="type">版权声明</span>：<span class="content">本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！</span>
+        </li>
+    </ul>
+    <div class="copy-copyright-info flex-center tooltip" data-content="复制版权信息" data-offset-y="-2px">
+        <i class="fa-solid fa-copy"></i>
+    </div>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"><i class="icon fas fa-hashtag"></i>读书笔记</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                               rel="prev"
+                               href="/2023/07/02/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E7%B4%A2%E5%BC%95/"
+                            >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                                <span class="title flex-center">
+                                <span class="post-nav-title-item text-ellipsis">《高性能MySQL》读书笔记创建高性能的索引</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                               rel="next"
+                               href="/2023/06/28/Schema/"
+                            >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item text-ellipsis">《高性能MySQL》读书笔记performanceSchema</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                                <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+            
+                <div class="comment-container">
+                    
+
+
+
+
+
+
+                </div>
+            
+        </div>
+
+        
+            <div class="pc-post-toc">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E4%BC%98%E5%8C%96%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-text">选择优化的数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E6%95%B0%E7%B1%BB%E5%9E%8B"><span class="nav-text">整数类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E6%95%B0%E7%B1%BB%E5%9E%8B"><span class="nav-text">实数类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%B1%BB%E5%9E%8B"><span class="nav-text">字符串类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#VARCHAR-CHAR"><span class="nav-text">VARCHAR &amp; CHAR</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#VARCHAR"><span class="nav-text">VARCHAR</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CHAR"><span class="nav-text">CHAR</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BLOB-TEXT"><span class="nav-text">BLOB &amp; TEXT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%9E%9A%E4%B8%BE%E4%BB%A3%E6%9B%BF%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%B1%BB%E5%9E%8B"><span class="nav-text">使用枚举代替字符串类型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E6%9C%9F%E5%92%8C%E6%97%B6%E9%97%B4%E7%B1%BB%E5%9E%8B"><span class="nav-text">日期和时间类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DATETIME"><span class="nav-text">DATETIME</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TIMESTAMP"><span class="nav-text">TIMESTAMP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%97%B6%E7%9A%84%E8%80%83%E8%99%91%E5%9B%A0%E7%B4%A0"><span class="nav-text">使用时的考虑因素</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E6%AE%8A%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-text">特殊数据类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Schema%E8%AE%BE%E8%AE%A1%E9%99%B7%E9%98%B1"><span class="nav-text">Schema设计陷阱</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom border-box">
+            
+<footer class="footer border-box">
+    <div class="border-box website-info-box default">
+        
+            <div class="copyright-info info-item default">
+                &copy;&nbsp;<span>2023</span>&nbsp;-&nbsp;2023
+                
+                    &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">dd</a>
+                
+            </div>
+
+            <div class="theme-info info-item default">
+                由&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.7.0</a>
+            </div>
+
+            
+
+            
+                <div class="deploy-info info-item default">
+                    
+                    <a target="_blank" rel="nofollow" href="https://github.com/">
+                        
+                        本站由 <span class="tooltip" data-content="GitHub Pages"><img src="/images/deploy-provider/github.png"></span> 提供部署服务
+                        
+                    </a>
+                    
+                </div>
+            
+        
+
+        <div class="count-item info-item default">
+            
+
+            
+                <span class="count-box border-box uv">
+                    <span class="item-type border-box">访问人数</span>
+                    <span class="item-value border-box uv" id="busuanzi_value_site_uv"></span>
+                </span>
+            
+
+            
+                <span class="count-box border-box pv">
+                    <span class="item-type border-box">总访问量</span>
+                    <span class="item-value border-box pv" id="busuanzi_value_site_pv"></span>
+                </span>
+            
+        </div>
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    <!-- post tools -->
+    
+        <div class="post-tools">
+            <div class="post-tools-container border-box">
+    <ul class="tools-list border-box">
+        <!-- PC TOC show toggle -->
+        
+            <li class="tools-item flex-center toggle-show-toc">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        <!-- PC go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        
+            <li class="tools-item toggle-show-toc-tablet flex-center">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        
+
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <!-- image mask -->
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    <!-- local search -->
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- tablet toc -->
+    
+        <div class="tablet-post-toc-mask">
+            <div class="tablet-post-toc">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E4%BC%98%E5%8C%96%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-text">选择优化的数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E6%95%B0%E7%B1%BB%E5%9E%8B"><span class="nav-text">整数类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E6%95%B0%E7%B1%BB%E5%9E%8B"><span class="nav-text">实数类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%B1%BB%E5%9E%8B"><span class="nav-text">字符串类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#VARCHAR-CHAR"><span class="nav-text">VARCHAR &amp; CHAR</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#VARCHAR"><span class="nav-text">VARCHAR</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CHAR"><span class="nav-text">CHAR</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BLOB-TEXT"><span class="nav-text">BLOB &amp; TEXT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%9E%9A%E4%B8%BE%E4%BB%A3%E6%9B%BF%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%B1%BB%E5%9E%8B"><span class="nav-text">使用枚举代替字符串类型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E6%9C%9F%E5%92%8C%E6%97%B6%E9%97%B4%E7%B1%BB%E5%9E%8B"><span class="nav-text">日期和时间类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DATETIME"><span class="nav-text">DATETIME</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TIMESTAMP"><span class="nav-text">TIMESTAMP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%97%B6%E7%9A%84%E8%80%83%E8%99%91%E5%9B%A0%E7%B4%A0"><span class="nav-text">使用时的考虑因素</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E6%AE%8A%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-text">特殊数据类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Schema%E8%AE%BE%E8%AE%A1%E9%99%B7%E9%98%B1"><span class="nav-text">Schema设计陷阱</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        </div>
+    
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/dark-light-toggle.js"></script>
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/code-block.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/lazyload.js"></script>
+
+
+<div class="post-scripts pjax">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/post-helper.js"></script>
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/libs/anime.min.js"></script>
+        
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/toc.js"></script>
+        
+    
+    
+    
+</div>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            KEEP.refresh();
+        });
+    });
+</script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="dd">
+    
+    <title>
+        
+            HTTP各版本区别 |
+        
+        dd&#39;s things
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/regular.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/solid.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/brands.min.css">
+    
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN","path":"search.json"}
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066cc","logo":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp","favicon":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp","avatar":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/avatar.11yw6gp0tnrk.webp","font_size":null,"font_family":null,"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"header_transparent":true,"background_img":"/images/bg.svg","description":"talk is cheap, show you the code.","font_color":null,"hitokoto":false},"scroll":{"progress_bar":true,"percent":true}},"local_search":{"enable":true,"preload":true},"code_block":{"tools":{"enable":true,"style":"mac"},"highlight_theme":"default"},"side_tools":{},"pjax":{"enable":true},"lazyload":{"enable":true},"comment":{"enable":false,"use":"valine","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":null,"github_admins":null,"repository":null,"client_id":null,"client_secret":null,"proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.8"},"waline":{"server_url":null,"reaction":false,"version":2}},"post":{"author_label":{"enable":false,"auto":true,"custom_label_list":["Trainee","Engineer","Architect"]},"word_count":{"enable":true,"wordcount":true,"min2read":true},"img_align":"center","copyright_info":true},"website_count":{"busuanzi_count":{"enable":true,"site_uv":true,"site_pv":true,"page_pv":true}},"version":"3.7.0"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <i class="pjax-progress-icon fas fa-circle-notch fa-spin"></i>
+    
+</div>
+
+
+<main class="page-container border-box">
+
+    <!-- home first screen  -->
+    
+
+    <!-- page content -->
+    <div class="page-main-content border-box">
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp">
+                </a>
+            
+            <a class="site-name" href="/">
+               dd&#39;s things
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                标签
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">标签</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle border-box">
+
+            <div class="main-content border-box">
+
+                
+
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+
+        <div class="article-content-container border-box">
+
+            <div class="article-title">
+                <span class="title-hover-animation">HTTP各版本区别</span>
+            </div>
+
+            
+                <div class="article-header border-box">
+                    
+                        <div class="avatar-box border-box">
+                            <img src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/avatar.11yw6gp0tnrk.webp">
+                        </div>
+                    
+                    <div class="info-box">
+                        <div class="author">
+                            <span class="name">dd</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info-container border-box post">
+    <div class="article-meta-info border-box">
+        
+
+
+        
+            
+                <span class="meta-info-item article-date">
+                    <i class="icon fa-regular fa-calendar-plus"></i>&nbsp;
+                    <span class="pc">2023-06-09 02:39:03</span>
+                    <span class="mobile">2023-06-09 02:39</span>
+                </span>
+            
+
+            
+                <span class="meta-info-item article-update-date">
+                    <i class="icon fas fa-file-pen"></i>&nbsp;
+                    <span class="pc">2023-08-05 18:57:16</span>
+                </span>
+            
+        
+
+        
+            <span class="meta-info-item article-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul>
+                    
+                            <li class="category-item">
+                                
+                                <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+                            </li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+            <span class="article-tag meta-info-item border-box">
+                <i class="icon fas fa-tags"></i>&nbsp;
+                <ul>
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/HTTP%E7%89%88%E6%9C%AC/">HTTP版本</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+        
+            <span class="meta-info-item article-wordcount">
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>2.6k 字</span>
+            </span>
+        
+        
+            <span class="meta-info-item article-min2read">
+                <i class="icon fas fa-clock"></i>&nbsp;<span>9 分钟</span>
+            </span>
+        
+        
+            <span class="meta-info-item article-pv">
+                <i class="icon fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    </div>
+
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content keep-markdown-body">
+                
+
+                <h2 id="HTTP1-0与HTTP1-1的区别"><a href="#HTTP1-0与HTTP1-1的区别" class="headerlink" title="HTTP1.0与HTTP1.1的区别"></a>HTTP1.0与HTTP1.1的区别</h2><p><strong>长连接</strong></p>
+<ul>
+<li><p>HTTP1.0默认适用短链接，客户端和服务器每进行一次HTTP交互就需要建立一次连接，任务结束就中断连接</p>
+</li>
+<li><p>HTTP1.1默认使用长连接，只要任意一端没有明确提出断开连接，就一直保持TCP连接状态</p>
+</li>
+</ul>
+<p><strong>管道网络传输</strong></p>
+<ul>
+<li><p>HTTP1.0需要收到第一个请求的回应后才可以发送第二个请求</p>
+</li>
+<li><p>HTTP1.1使用长连接，使管道网络传输成为可能。在同一个TCP连接中，客户端可以发起多个请求，只要第一个请求发送出去了就可以发送第二个，不需要等待第一个请求的返回，可以减少整体的响应时间</p>
+</li>
+</ul>
+<p><strong>Host域</strong></p>
+<ul>
+<li><p>HTTP1.0认为每台服务器都绑定一个唯一的IP地址，因此请求消息中的URL没有传递主机名，但是随着虚拟主机技术的发展，一台物理服务器上可以存在多个虚拟主机，共享一个IP地址，也就是说一个IP地址是可以对应多个域名的</p>
+<ul>
+<li><p>比如一台IP为A的服务器上部署着谷歌、百度、淘宝的网站，在发送请求时域名解析会解析到同一个IP地址，那么如何区分用户是要具体访问主机中的哪一个应用</p>
+</li>
+<li><p>使用ip+port区分</p>
+<ul>
+<li>需要为每个网站部署一个端口，客户端在访问的时候需要直到是哪一个端口</li>
+</ul>
+</li>
+<li><p>虚拟主机</p>
+<ul>
+<li><p>将一台完整的服务器分成若个主机，可以在单一主机上运行多个服务，客户端就可以使用同一个ip和同一个端口号访问不同的网站，通过host域进行区分</p>
+</li>
+<li><p>通过用户请求的host域名进行区分，服务器后台解析出host域并和服务器上设置的server_name比对，如果匹配则访问，不匹配则连接丢弃报错</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>HTTP1.1增加Host域且请求消息中如果没有Host域会报告错误400Bad Request</p>
+</li>
+</ul>
+<p><strong>断点续传</strong></p>
+<ul>
+<li><p>HTTP1.0每次只会传输整个数据实体，没办法部分传输</p>
+</li>
+<li><p>HTTP1.1默认支持断点续传，原理是在请求报文头中加入Range字段段</p>
+</li>
+</ul>
+<p><strong>消息通知管理</strong></p>
+<ul>
+<li>HTTP1.1新增了24个错误状态响应码，如409(Conflict)表示请求的资源与资源当前状态冲突；410(Gone)表示服务器上某个资源被永久性删除</li>
+</ul>
+<p><strong>缓存处理</strong></p>
+<ul>
+<li><p>HTTP1.0使用header中的if-modified-since和expires作为缓存判断标准</p>
+</li>
+<li><p>HTTP1.1引入了更多缓存控制策略如Entity tag，If-Unmodified-Since，If-match，If-None-Match等</p>
+</li>
+</ul>
+<h2 id="HTTP1-1和HTTP2-0的区别"><a href="#HTTP1-1和HTTP2-0的区别" class="headerlink" title="HTTP1.1和HTTP2.0的区别"></a>HTTP1.1和HTTP2.0的区别</h2><p><strong>头部压缩</strong></p>
+<ul>
+<li><p>HTTP1.1中Header问题</p>
+<ul>
+<li><p>固定的字段占字节大</p>
+</li>
+<li><p>大量的请求和响应报文中许多字段重复</p>
+</li>
+<li><p>只对body进行压缩，没有对header进行压缩</p>
+</li>
+</ul>
+</li>
+<li><p>HTTP2.0使用HPACK算法对header的数据进行压缩</p>
+<ul>
+<li><p>HPACK算法：在客户端和服务器两端建立字典，将字段存入字典中并生成索引号，使用索引号代表字段了</p>
+<ul>
+<li><p>静态字典</p>
+<ul>
+<li>为高频出现在头部的字符串和字段建立静态表，写入HTTP&#x2F;2框架中</li>
+</ul>
+</li>
+<li><p>动态字典</p>
+<ul>
+<li><p>不在静态表范围内的头部字符串要自行构建动态表，Index从62起步，在编码解码的时候随时更新，下一次发送的时候就只需要发送一个字节的index</p>
+</li>
+<li><p>必须同一个连接上重复传输完全相同的HTTP头部</p>
+</li>
+<li><p>占用内存越来越大</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>哈夫曼编码压缩整数和字符串</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>二进制格式</strong></p>
+<ul>
+<li><p>二进制：体积小、速度块、没有歧义</p>
+<ul>
+<li>对人不友好，但是对计算机友好，可以直接解析二进制报文，增加了数据传输效率</li>
+</ul>
+</li>
+<li><p>HTTP1.1的报文使用文本格式，HTTP2.0使用二进制格式</p>
+</li>
+<li><p>将报文分为头信息帧和数据帧</p>
+</li>
+<li><p>头信息帧的最后4个字节是流标识符，最高位被保留不用，流标识位用于表示该Fream属于哪个Stream，接收方可以根据该信息从乱序的帧中找到相同Stream ID的帧从而有序组装信息</p>
+</li>
+</ul>
+<p><strong>多路复用</strong></p>
+<ul>
+<li><p>HTTP2.0将每一个请求看成是一个流，为每个请求分配一个唯一的流id，并将请求分成多个块，不同的Stream的块是可以混杂在一起发送的，因此可以并发不同的请求</p>
+</li>
+<li><p>流的特点</p>
+<ul>
+<li><p>流是可并发的，一个HTTP2连接上可以同时发出多个流传输数据</p>
+</li>
+<li><p>每一个流有唯一的流ID，客户端发出为奇数，服务器为偶数</p>
+</li>
+<li><p>StreamID不可复用，只能顺序递增，使用完后需要发出控制帧GOAWAY关闭TCP连接</p>
+</li>
+<li><p>第0号流不能关闭，不能发送数据帧，只能发送控制帧，用于流量控制</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>服务端推送</strong></p>
+<ul>
+<li><p>HTTP1.1每一个网络资源都必须由客户端明确地请求</p>
+</li>
+<li><p>HTTP2服务器可以主动向客户端发送消息</p>
+</li>
+<li><p>例如浏览器请求HTML时提前将可能用到的js等静态资源主动发送给客户端减少延时等待与避免请求</p>
+</li>
+</ul>
+<p><strong>优先级</strong></p>
+<ul>
+<li>客户端可以指定数据流的优先级</li>
+</ul>
+<h2 id="HTTP3-0与HTTP2-0的区别"><a href="#HTTP3-0与HTTP2-0的区别" class="headerlink" title="HTTP3.0与HTTP2.0的区别"></a>HTTP3.0与HTTP2.0的区别</h2><p><strong>HTTP2是基于TCP协议的</strong></p>
+<ul>
+<li><p>存在队头阻塞</p>
+</li>
+<li><p>TCP和TLS握手时延，至少需要3RTT</p>
+</li>
+<li><p>网络迁移需要重新连接</p>
+</li>
+</ul>
+<p><strong>HTTP3将下层的TCP协议更改为UDP协议并增加了QUIC协议</strong></p>
+<ul>
+<li><p>QUIC是一个在UDP上的伪TCP+TLS+HTTP2的多路复用协议</p>
+</li>
+<li><p>解决HTTP2队头阻塞问题</p>
+<ul>
+<li><p>UDP不关心包的顺序，但是QUIC会</p>
+</li>
+<li><p>QUIC保证包的可靠性，每个数据包都有一个序号唯一标识，当某个流的数据包丢失了，即使这个流的其他数据包到了也没办法被HTTP3读取，只有QUIC重传丢失的报文才会交给HTTP3</p>
+</li>
+<li><p>其他流的数据包只要被完整接受就可以被HTTP3读取</p>
+</li>
+<li><p>QUIC 连接上的多个 Stream 之间并没有依赖，都是独立的，某个流发生丢包了，只会影响该流，其他流不受影响</p>
+</li>
+</ul>
+</li>
+<li><p>更快的连接建立</p>
+<ul>
+<li><p>HTTP&#x2F;1 和 HTTP&#x2F;2 协议，TCP 和 TLS 是分层的，分别属于内核实现的传输层、OpenSSL 库实现的表示层，因此它们难以合并在一起，需要分批次来握手，先 TCP 握手，再 TLS 握手</p>
+</li>
+<li><p>HTTP&#x2F;3 的 QUIC 协议并不是与 TLS 分层，而是 QUIC 内部包含了 TLS，它在自己的帧会携带 TLS 里的“记录”，再加上 QUIC 使用的是 TLS 1.3，因此仅需 1 个 RTT 就可以「同时」完成建立连接与密钥协商，甚至在第二次连接的时候，应用数据包可以和 QUIC 握手信息（连接信息 + TLS 信息）一起发送，达到 0-RTT 的效果</p>
+</li>
+<li><p>HTTP&#x2F;3 在传输数据前虽然需要 QUIC 协议握手，这个握手过程只需要 1 RTT，握手的目的是为确认双方的「连接 ID」，连接迁移就是基于连接 ID 实现的</p>
+</li>
+</ul>
+</li>
+<li><p>连接迁移</p>
+<ul>
+<li><p>基于TCP传输协议的HTTP协议是通过四元组确定一条TCP连接，当设备从一个网络切换到另一个网络的时候IP地址改变了，就需要断开连接重新建立连接</p>
+</li>
+<li><p>QUIC没有使用四元组绑定连接，而是通过连接ID标识通信的两个端点，客户端和服务器各选择一组ID标识自己，因此即使移动设备网络变化导致IP地址变化了，只要仍然有上下文信息（连接ID、TLS密钥等）就可以无缝复用原连接了，消除重连成本</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>HTTP3协议</strong></p>
+<ul>
+<li><p>HTTP&#x2F;3 同 HTTP&#x2F;2 一样采用二进制帧的结构，不同的地方在于 HTTP&#x2F;2 的二进制帧里需要定义 Stream，而 HTTP&#x2F;3 自身不需要再定义 Stream，直接使用 QUIC 里的 Stream，于是 HTTP&#x2F;3 的帧的结构也变简单了</p>
+</li>
+<li><p>HTTP&#x2F;3 在头部压缩算法这一方面也做了升级，升级成了 QPACK。与 HTTP&#x2F;2 中的 HPACK 编码方式相似，HTTP&#x2F;3 中的 QPACK 也采用了静态表、动态表及 Huffman 编码。</p>
+</li>
+<li><p>对于静态表的变化，HTTP&#x2F;2 中的 HPACK 的静态表只有 61 项，而 HTTP&#x2F;3 中的 QPACK 的静态表扩大到 91 项。</p>
+</li>
+<li><p>HTTP&#x2F;2 和 HTTP&#x2F;3 的 Huffman 编码并没有多大不同，但是动态表编解码方式不同。</p>
+</li>
+<li><p>所谓的动态表，在首次请求-响应后，双方会将未包含在静态表中的 Header 项更新各自的动态表，接着后续传输时仅用 1 个数字表示，然后对方可以根据这 1 个数字从动态表查到对应的数据，就不必每次都传输长长的数据，大大提升了编码效率。</p>
+</li>
+<li><p>可以看到，动态表是具有时序性的，如果首次出现的请求发生了丢包，后续的收到请求，对方就无法解码出 HPACK 头部，因为对方还没建立好动态表，因此后续的请求解码会阻塞到首次请求中丢失的数据包重传过来</p>
+<ul>
+<li><p>QUIC 会有两个特殊的单向流，所谓的单向流只有一端可以发送消息，双向则指两端都可以发送消息，传输 HTTP 消息时用的是双向流，这两个单向流的用法：</p>
+</li>
+<li><p>一个叫 QPACK Encoder Stream，用于将一个字典（Key-Value）传递给对方，比如面对不属于静态表的 HTTP 请求头部，客户端可以通过这个 Stream 发送字典；</p>
+</li>
+<li><p>一个叫 QPACK Decoder Stream，用于响应对方，告诉它刚发的字典已经更新到自己的本地动态表了，后续就可以使用这个字典来编码了。</p>
+</li>
+<li><p>这两个特殊的单向流是用来同步双方的动态表，编码方收到解码方更新确认的通知后，才使用动态表编码 HTTP 头部</p>
+</li>
+<li><p>也就是说要更新动态表前先通知对方，只有在得到对方的响应后才可以使用动态表中的内容</p>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    
+<div class="article-copyright-info-container">
+    <ul class="copyright-info-content">
+        <li class="post-title">
+            <span class="type">本文标题</span>：<span class="content">HTTP各版本区别</span>
+        </li>
+        <li class="post-author">
+            <span class="type">本文作者</span>：<span class="content">dd</span>
+        </li>
+        <li class="post-time">
+            <span class="type">创建时间</span>：<span class="content">2023-06-09 02:39:03</span>
+        </li>
+        <li class="post-link">
+            <span class="type">本文链接</span>：<span class="content">2023/06/09/HTTP各版本区别/</span>
+        </li>
+        <li class="post-license">
+            <span class="type">版权声明</span>：<span class="content">本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！</span>
+        </li>
+    </ul>
+    <div class="copy-copyright-info flex-center tooltip" data-content="复制版权信息" data-offset-y="-2px">
+        <i class="fa-solid fa-copy"></i>
+    </div>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/tags/HTTP%E7%89%88%E6%9C%AC/"><i class="icon fas fa-hashtag"></i>HTTP版本</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                               rel="prev"
+                               href="/2023/06/28/Schema/"
+                            >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                                <span class="title flex-center">
+                                <span class="post-nav-title-item text-ellipsis">《高性能MySQL》读书笔记performanceSchema</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                               rel="next"
+                               href="/2023/06/06/%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"
+                            >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item text-ellipsis">红黑树vs平衡二叉树 &amp; B+树vsB树vs跳表</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                                <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+            
+                <div class="comment-container">
+                    
+
+
+
+
+
+
+                </div>
+            
+        </div>
+
+        
+            <div class="pc-post-toc">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP1-0%E4%B8%8EHTTP1-1%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">HTTP1.0与HTTP1.1的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP1-1%E5%92%8CHTTP2-0%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">HTTP1.1和HTTP2.0的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP3-0%E4%B8%8EHTTP2-0%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">HTTP3.0与HTTP2.0的区别</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom border-box">
+            
+<footer class="footer border-box">
+    <div class="border-box website-info-box default">
+        
+            <div class="copyright-info info-item default">
+                &copy;&nbsp;<span>2023</span>&nbsp;-&nbsp;2023
+                
+                    &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">dd</a>
+                
+            </div>
+
+            <div class="theme-info info-item default">
+                由&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.7.0</a>
+            </div>
+
+            
+
+            
+                <div class="deploy-info info-item default">
+                    
+                    <a target="_blank" rel="nofollow" href="https://github.com/">
+                        
+                        本站由 <span class="tooltip" data-content="GitHub Pages"><img src="/images/deploy-provider/github.png"></span> 提供部署服务
+                        
+                    </a>
+                    
+                </div>
+            
+        
+
+        <div class="count-item info-item default">
+            
+
+            
+                <span class="count-box border-box uv">
+                    <span class="item-type border-box">访问人数</span>
+                    <span class="item-value border-box uv" id="busuanzi_value_site_uv"></span>
+                </span>
+            
+
+            
+                <span class="count-box border-box pv">
+                    <span class="item-type border-box">总访问量</span>
+                    <span class="item-value border-box pv" id="busuanzi_value_site_pv"></span>
+                </span>
+            
+        </div>
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    <!-- post tools -->
+    
+        <div class="post-tools">
+            <div class="post-tools-container border-box">
+    <ul class="tools-list border-box">
+        <!-- PC TOC show toggle -->
+        
+            <li class="tools-item flex-center toggle-show-toc">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        <!-- PC go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        
+            <li class="tools-item toggle-show-toc-tablet flex-center">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        
+
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <!-- image mask -->
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    <!-- local search -->
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- tablet toc -->
+    
+        <div class="tablet-post-toc-mask">
+            <div class="tablet-post-toc">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP1-0%E4%B8%8EHTTP1-1%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">HTTP1.0与HTTP1.1的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP1-1%E5%92%8CHTTP2-0%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">HTTP1.1和HTTP2.0的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP3-0%E4%B8%8EHTTP2-0%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">HTTP3.0与HTTP2.0的区别</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        </div>
+    
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/dark-light-toggle.js"></script>
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/code-block.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/lazyload.js"></script>
+
+
+<div class="post-scripts pjax">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/post-helper.js"></script>
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/libs/anime.min.js"></script>
+        
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/toc.js"></script>
+        
+    
+    
+    
+</div>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            KEEP.refresh();
+        });
+    });
+</script>
+
+
+
+
+</body>
+</html>

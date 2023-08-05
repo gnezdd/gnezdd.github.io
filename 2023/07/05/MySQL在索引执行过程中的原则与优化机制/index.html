@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="dd">
+    
+    <title>
+        
+            MySQL在索引执行过程中的原则与优化机制 |
+        
+        dd&#39;s things
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/regular.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/solid.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/font/css/brands.min.css">
+    
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN","path":"search.json"}
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066cc","logo":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp","favicon":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp","avatar":"https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/avatar.11yw6gp0tnrk.webp","font_size":null,"font_family":null,"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"header_transparent":true,"background_img":"/images/bg.svg","description":"talk is cheap, show you the code.","font_color":null,"hitokoto":false},"scroll":{"progress_bar":true,"percent":true}},"local_search":{"enable":true,"preload":true},"code_block":{"tools":{"enable":true,"style":"mac"},"highlight_theme":"default"},"side_tools":{},"pjax":{"enable":true},"lazyload":{"enable":true},"comment":{"enable":false,"use":"valine","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":null,"github_admins":null,"repository":null,"client_id":null,"client_secret":null,"proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.8"},"waline":{"server_url":null,"reaction":false,"version":2}},"post":{"author_label":{"enable":false,"auto":true,"custom_label_list":["Trainee","Engineer","Architect"]},"word_count":{"enable":true,"wordcount":true,"min2read":true},"img_align":"center","copyright_info":true},"website_count":{"busuanzi_count":{"enable":true,"site_uv":true,"site_pv":true,"page_pv":true}},"version":"3.7.0"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <i class="pjax-progress-icon fas fa-circle-notch fa-spin"></i>
+    
+</div>
+
+
+<main class="page-container border-box">
+
+    <!-- home first screen  -->
+    
+
+    <!-- page content -->
+    <div class="page-main-content border-box">
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/ba7055311d1242c9e89edeace71377c.5j69hws5wxk0.webp">
+                </a>
+            
+            <a class="site-name" href="/">
+               dd&#39;s things
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                标签
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">标签</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle border-box">
+
+            <div class="main-content border-box">
+
+                
+
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+
+        <div class="article-content-container border-box">
+
+            <div class="article-title">
+                <span class="title-hover-animation">MySQL在索引执行过程中的原则与优化机制</span>
+            </div>
+
+            
+                <div class="article-header border-box">
+                    
+                        <div class="avatar-box border-box">
+                            <img src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230430/avatar.11yw6gp0tnrk.webp">
+                        </div>
+                    
+                    <div class="info-box">
+                        <div class="author">
+                            <span class="name">dd</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info-container border-box post">
+    <div class="article-meta-info border-box">
+        
+
+
+        
+            
+                <span class="meta-info-item article-date">
+                    <i class="icon fa-regular fa-calendar-plus"></i>&nbsp;
+                    <span class="pc">2023-07-05 22:54:39</span>
+                    <span class="mobile">2023-07-05 22:54</span>
+                </span>
+            
+
+            
+                <span class="meta-info-item article-update-date">
+                    <i class="icon fas fa-file-pen"></i>&nbsp;
+                    <span class="pc">2023-08-05 18:57:16</span>
+                </span>
+            
+        
+
+        
+            <span class="meta-info-item article-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul>
+                    
+                            <li class="category-item">
+                                
+                                <a href="/categories/MySQL/">MySQL</a>
+                            </li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+            <span class="article-tag meta-info-item border-box">
+                <i class="icon fas fa-tags"></i>&nbsp;
+                <ul>
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/MySQL/">MySQL</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+        
+            <span class="meta-info-item article-wordcount">
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>2.3k 字</span>
+            </span>
+        
+        
+            <span class="meta-info-item article-min2read">
+                <i class="icon fas fa-clock"></i>&nbsp;<span>8 分钟</span>
+            </span>
+        
+        
+            <span class="meta-info-item article-pv">
+                <i class="icon fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    </div>
+
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content keep-markdown-body">
+                
+
+                <p>本文主要介绍MySQL在执行查询语句使用索引时的原子以及优化措施，如MRR、索引跳跃扫描等等</p>
+<h2 id="最左匹配原则"><a href="#最左匹配原则" class="headerlink" title="最左匹配原则"></a>最左匹配原则</h2><p>对于联合索引，MySQL会一直向右匹配直到遇到范围查询（&gt;,&lt;）就停止匹配，也就是范围查询字段后面的字段无法使用到联合索引，但是对于&gt;&#x3D;、&lt;&#x3D;、between、like前缀匹配的范围查询不会停止匹配，会使用到范围查询后面的字段</p>
+<p><strong>原因</strong></p>
+<p>索引树是按照索引的顺序从左到右建立的，先根据第一个字段进行排序，在第一个字段相同的情况下根据第二个字段进行排序，以此类推</p>
+<p>除了第一个字段，其他字段都是全局无序，局部有序的</p>
+<p>所以在符合范围查询的字段后面的字段是无序的，无法使用到索引</p>
+<p><strong>示例</strong></p>
+<p>建立一个表，表中对v1、v2建立联合索引（ix_v1_v2）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `t1` (</span><br><span class="line">  `id` int NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `v1` int DEFAULT NULL,</span><br><span class="line">  `v2` int DEFAULT NULL,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  KEY `ix_v1_v2` (`v1`,`v2`)</span><br><span class="line">) ;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>EXPLAIN SELECT * FROM t1 WHERE v1 &#x3D; 10 and v2 &#x3D; 10;</li>
+</ul>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230806/image.16lhtl90496o.webp"
+                      alt="image-20230805231401292"
+                ></p>
+<p>等值查询能够使用到联合索引中的v1和v2</p>
+<ul>
+<li>EXPLAIN SELECT * FROM t1 WHERE v1 &gt; 10 and v2 &#x3D; 10;</li>
+</ul>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230806/image.4aq0yvcgs0c0.webp"
+                      alt="image-20230805231506994"
+                ></p>
+<p>在符合v1 &gt; 10的联合索引中，v2的值是无序的，因此联合索引中只能使用到v1，无法使用到v2</p>
+<ul>
+<li>EXPLAIN SELECT * FROM t1 WHERE v1 &gt;&#x3D; 10 and v2 &#x3D; 10;</li>
+</ul>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230806/image.16lhtl90496o.webp"
+                      alt="image-20230805231619736"
+                ></p>
+<p>在v1&#x3D;10的联合索引中，v2是有序的，因此在联合索引中可以使用到v2字段</p>
+<ul>
+<li>EXPLAIN SELECT * FROM t1 WHERE v1 BETWEEN 10 AND 20 and v2 &#x3D; 10;</li>
+</ul>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230806/image.1zc210w94u9s.webp"
+                      alt="image-20230805231747174"
+                ></p>
+<p>MySQL的between是闭区间也就是相当于v1 &gt;&#x3D; 10 and v1 &lt;&#x3D; 20，因此在v1&#x3D;10和v1&#x3D;20的时候，v2是有序的，因此在联合索引中可以使用到v2字段</p>
+<ul>
+<li>EXPLAIN SELECT * FROM t1 WHERE v1 like ‘1%’ and v2 &#x3D; 10;</li>
+</ul>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230806/image.1zc210w94u9s.webp"
+                      alt="image-20230805231856835"
+                ></p>
+<p>在v1&#x3D;1的时候，v2也是有序的，理由同上</p>
+<h2 id="索引跳跃扫描ISS"><a href="#索引跳跃扫描ISS" class="headerlink" title="索引跳跃扫描ISS"></a>索引跳跃扫描ISS</h2><p>MySQL8.0之后新增的，当联合索引的某一个字段的唯一值比较少时，即使查询条件中没有使用到该字段，查询的时候也可以使用到联合索引中该字段后面的字段</p>
+<p><strong>适用场景</strong></p>
+<ul>
+<li>联合索引中前缀列的基数远小于后缀列的基数</li>
+<li>查询条件中只涉及到联合索引的后缀列</li>
+</ul>
+<p><strong>失效场景</strong></p>
+<ul>
+<li>查询条件中包含非索引字段</li>
+<li>SQL语句中带有group by或distinct</li>
+<li>只支持单表查询，多表关联会失效</li>
+</ul>
+<p><strong>示例</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `t2` (</span><br><span class="line">  `id` int NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `v1` int DEFAULT NULL,</span><br><span class="line">  `v2` int DEFAULT NULL,</span><br><span class="line">  `v3` int DEFAULT NULL,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  KEY `ix_v1_v2` (`v1`,`v2`)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">CREATE DEFINER=`root`@`%` PROCEDURE `t2_insert_1k`()</span><br><span class="line">BEGIN</span><br><span class="line">	DECLARE i INT;</span><br><span class="line">	SET i = 0;</span><br><span class="line">	WHILE i &lt; 500 DO</span><br><span class="line">		INSERT INTO t2(v1,v2,v3) VALUES(1,i,i);</span><br><span class="line">		SET i = i + 1;</span><br><span class="line">	END WHILE;</span><br><span class="line">	WHILE i &lt; 1000 DO</span><br><span class="line">		INSERT INTO t2(v1,v2,v3) VALUES(2,i,i);</span><br><span class="line">		SET i = i + 1;</span><br><span class="line">	END WHILE;</span><br><span class="line">END</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>EXPLAIN SELECT v2 FROM t2 WHERE v2 &#x3D; 10;</li>
+</ul>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230806/image.foidzd722ww.webp"
+                      alt="image-20230805234924008"
+                ></p>
+<p>适用到了索引跳跃扫描功能</p>
+<ul>
+<li>EXPLAIN SELECT * FROM t2 WHERE v2 &#x3D; 10;</li>
+</ul>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230806/image.24gdpq692lnk.webp"
+                      alt="image-20230805235038222"
+                ></p>
+<p>当查询字段中包含非索引的字段，就无法适用到索引跳跃扫描，这里为全表查询</p>
+<ul>
+<li>EXPLAIN SELECT DISTINCT v1 FROM t2 WHERE v2 &#x3D; 10;</li>
+</ul>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="https://cdn.staticaly.com/gh/gnezdd/picx-images-hosting@master/20230806/image.54x61p4j3og0.webp"
+                      alt="image-20230805235216273"
+                ></p>
+<p>即使适用到了联合索引，但是是扫描整棵联合索引树，没有使用到索引跳跃扫描</p>
+<h2 id="索引下推ICP"><a href="#索引下推ICP" class="headerlink" title="索引下推ICP"></a>索引下推ICP</h2><p>MySQL在存储引擎层进行索引遍历过程中对索引中包含的字段先做判断，直接过滤掉不满足条件的记录再返回给server层，减少回表的次数</p>
+<p><strong>示例</strong></p>
+<p>对于联合索引（a, b），在执行 select * from table where a &gt; 1 and b &#x3D; 2 语句的时候，只有 a 字段能用到索引，在联合索引的索引树中找到a&gt;1的所有记录的主键值，之后对于b是否等于2的判断，是在联合索引中判断还是在主键索引中判断</p>
+<ul>
+<li>没有使用ICP：需要对获取到的每个主键值到聚簇索引中得到所有的数据行并交给服务层判断</li>
+<li>使用ICP：在获取每个主键值的同时会在联合索引树中判断是否符合要求，如果符合要求才取出对应的主键值到聚簇索引中获取数据返回给服务层</li>
+</ul>
+<h2 id="索引覆盖"><a href="#索引覆盖" class="headerlink" title="索引覆盖"></a>索引覆盖</h2><p>SQL中查询的所有字段在索引B+树的叶子节点上都可以得到，不需要进行回表查询</p>
+<h2 id="MRR（Multi-Range-Read）"><a href="#MRR（Multi-Range-Read）" class="headerlink" title="MRR（Multi-Range Read）"></a>MRR（Multi-Range Read）</h2><p>通过将随机磁盘读转换为顺序磁盘读，提高查询性能</p>
+<p>在业务中我们应该尽量通过索引覆盖减少回表操作降低IO次数，但是很多时候二级索引树没办法满足我们的需求，还是需要进行回表才能查询到数据。这样子会增加磁盘IO的次数，并且是离散IO</p>
+<p><strong>示例</strong></p>
+<p><code>SELECT * FROM zz_student_score WHERE score BETWEEN 0 AND 59;</code></p>
+<p>在没有MRR之前的执行流程：</p>
+<ul>
+<li>先在成绩字段的索引上找到<code>0</code>分的节点，然后拿着<code>ID</code>去回表得到成绩零分的学生信息。</li>
+<li>再次回到成绩索引，继续找到所有<code>1</code>分的节点，继续回表得到<code>1</code>分的学生信息。</li>
+<li>再次回到成绩索引，继续找到所有<code>2</code>分的节点…</li>
+<li>周而复始，不断重复这个过程，直到将<code>0~59</code>分的所有学生信息全部拿到为止</li>
+</ul>
+<p>此时假设此时成绩<code>0~5</code>分的表数据，位于磁盘空间的<code>page_01</code>页上，而成绩为<code>5~10</code>分的数据，位于磁盘空间的<code>page_02</code>页上，成绩为<code>10~15</code>分的数据，又位于磁盘空间的<code>page_01</code>页上。此时回表查询时就会导致在<code>page_01、page_02</code>两页空间上来回切换，但<code>0~5、10~15</code>分的数据完全可以合并，然后读一次<code>page_01</code>就可以了，既能减少<code>IO</code>次数，同时还避免了离散<code>IO</code></p>
+<p>MRR就是用来解决这个问题：</p>
+<p><code>MRR</code>机制中，对于辅助索引中查询出的<code>ID</code>，会将其放到缓冲区的<code>read_rnd_buffer</code>中，然后等全部的索引检索工作完成后，或者缓冲区中的数据达到<code>read_rnd_buffer_size</code>大小时，此时<code>MySQL</code>会对缓冲区中的数据排序，从而得到一个有序的<code>ID</code>集合：<code>rest_sort</code>，最终再根据顺序<code>IO</code>去聚簇&#x2F;主键索引中回表查询数据</p>
+<h2 id="索引合并index-merge"><a href="#索引合并index-merge" class="headerlink" title="索引合并index merge"></a>索引合并index merge</h2><p>对多个索引分别进行扫描，然后将各种的结果进行合并</p>
+<p>MySQL5.0之前，一个表一次只能使用一个索引，无法同时使用多个索引分别进行条件扫描。但是从5.1开始，引入了 index merge 优化技术，对同一个表可以使用多个索引分别进行条件扫描</p>
+<h3 id="合并算法"><a href="#合并算法" class="headerlink" title="合并算法"></a>合并算法</h3><p><strong>intersection</strong></p>
+<p>将多个索引扫描得到的结果进行交集运算。一般出现在查询条件中使用AND</p>
+<p>条件：</p>
+<ul>
+<li>如果是二级索引，则必须是等值查询。如果二级索引是复合索引，则复合索引的每一列都必须覆盖到，不能只是其中的某几列</li>
+<li>主键索引可以是范围查询</li>
+</ul>
+<p><strong>union</strong></p>
+<p>将多个索引扫描得到的结果进行并集运算。一般出现在查询条件中使用OR</p>
+<p>条件：</p>
+<ul>
+<li>如果是二级索引，则必须是等值查询。如果二级索引是复合索引，则复合索引的每一列都必须覆盖到，不能只是其中的某几列</li>
+<li>主键索引可以是范围查询</li>
+</ul>
+<p><strong>sort_union</strong></p>
+<p>在union不适用的情况下会使用</p>
+<ul>
+<li>二级索引也可以按照范围匹配</li>
+<li>复合索引也不用覆盖所有列</li>
+</ul>
+<p><strong>原因</strong></p>
+<p>为了 intersect 和 union 操作方便，在各个单独的索引扫描的时候，都是要获取到有序的主键值的合集，各个索引都获取到有序的主键，然后求交集或者并集就会比较方便</p>
+<p>因此union和intersect中：</p>
+<ul>
+<li><p>二级索引必须等值匹配，等值匹配意味着最终拿到的 B+Tree 的叶子上的主键值就是唯一的；二级索引如果可以按照范围查找，那么最终从二级索引的 B+Tree 的叶子结点上拿到的主键值就不是有序的了</p>
+</li>
+<li><p>复合索引如果没有覆盖到所有列，意味着最终拿到的主键值也是无序</p>
+</li>
+</ul>
+<p>sort_union允许二级索引按照范围匹配与不需要覆盖所有列是因为会对先拿到的主键值进行排序，之后才会去求交集或并集。相比于前两种合并方式性能会比较低</p>
+<p><strong>Index Merge已知的缺陷</strong></p>
+<ul>
+<li>如果在where语句中存在多层嵌套的AND&#x2F;OR，MySQL可能不会选择最优的方案，可以尝试拆分where子句的条件进行转换</li>
+</ul>
+<p>(x and y) or z &#x3D;&#x3D;&gt; (x or z) and (y or z)</p>
+<p>(x or y) and z &#x3D;&#x3D;&gt; (x and z) or (y and z)</p>
+<ul>
+<li>index merge不能用于全文索引</li>
+</ul>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    
+<div class="article-copyright-info-container">
+    <ul class="copyright-info-content">
+        <li class="post-title">
+            <span class="type">本文标题</span>：<span class="content">MySQL在索引执行过程中的原则与优化机制</span>
+        </li>
+        <li class="post-author">
+            <span class="type">本文作者</span>：<span class="content">dd</span>
+        </li>
+        <li class="post-time">
+            <span class="type">创建时间</span>：<span class="content">2023-07-05 22:54:39</span>
+        </li>
+        <li class="post-link">
+            <span class="type">本文链接</span>：<span class="content">2023/07/05/MySQL在索引执行过程中的原则与优化机制/</span>
+        </li>
+        <li class="post-license">
+            <span class="type">版权声明</span>：<span class="content">本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！</span>
+        </li>
+    </ul>
+    <div class="copy-copyright-info flex-center tooltip" data-content="复制版权信息" data-offset-y="-2px">
+        <i class="fa-solid fa-copy"></i>
+    </div>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/tags/MySQL/"><i class="icon fas fa-hashtag"></i>MySQL</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                               rel="prev"
+                               href="/2023/07/09/%E6%85%A2%E6%9F%A5SQL%E5%AE%9A%E4%BD%8D%E4%B8%8E%E5%88%86%E6%9E%90/"
+                            >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                                <span class="title flex-center">
+                                <span class="post-nav-title-item text-ellipsis">慢查SQL定位与分析</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                               rel="next"
+                               href="/2023/07/03/%E6%9F%A5%E8%AF%A2%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"
+                            >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item text-ellipsis">《高性能MySQL》读书笔记查询性能优化</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                                <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+            
+                <div class="comment-container">
+                    
+
+
+
+
+
+
+                </div>
+            
+        </div>
+
+        
+            <div class="pc-post-toc">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%B7%A6%E5%8C%B9%E9%85%8D%E5%8E%9F%E5%88%99"><span class="nav-text">最左匹配原则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E8%B7%B3%E8%B7%83%E6%89%AB%E6%8F%8FISS"><span class="nav-text">索引跳跃扫描ISS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E4%B8%8B%E6%8E%A8ICP"><span class="nav-text">索引下推ICP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E8%A6%86%E7%9B%96"><span class="nav-text">索引覆盖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MRR%EF%BC%88Multi-Range-Read%EF%BC%89"><span class="nav-text">MRR（Multi-Range Read）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6index-merge"><span class="nav-text">索引合并index merge</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%88%E5%B9%B6%E7%AE%97%E6%B3%95"><span class="nav-text">合并算法</span></a></li></ol></li></ol>
+    </div>
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom border-box">
+            
+<footer class="footer border-box">
+    <div class="border-box website-info-box default">
+        
+            <div class="copyright-info info-item default">
+                &copy;&nbsp;<span>2023</span>&nbsp;-&nbsp;2023
+                
+                    &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">dd</a>
+                
+            </div>
+
+            <div class="theme-info info-item default">
+                由&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.7.0</a>
+            </div>
+
+            
+
+            
+                <div class="deploy-info info-item default">
+                    
+                    <a target="_blank" rel="nofollow" href="https://github.com/">
+                        
+                        本站由 <span class="tooltip" data-content="GitHub Pages"><img src="/images/deploy-provider/github.png"></span> 提供部署服务
+                        
+                    </a>
+                    
+                </div>
+            
+        
+
+        <div class="count-item info-item default">
+            
+
+            
+                <span class="count-box border-box uv">
+                    <span class="item-type border-box">访问人数</span>
+                    <span class="item-value border-box uv" id="busuanzi_value_site_uv"></span>
+                </span>
+            
+
+            
+                <span class="count-box border-box pv">
+                    <span class="item-type border-box">总访问量</span>
+                    <span class="item-value border-box pv" id="busuanzi_value_site_pv"></span>
+                </span>
+            
+        </div>
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    <!-- post tools -->
+    
+        <div class="post-tools">
+            <div class="post-tools-container border-box">
+    <ul class="tools-list border-box">
+        <!-- PC TOC show toggle -->
+        
+            <li class="tools-item flex-center toggle-show-toc">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        <!-- PC go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        
+            <li class="tools-item toggle-show-toc-tablet flex-center">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        
+
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <!-- image mask -->
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    <!-- local search -->
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- tablet toc -->
+    
+        <div class="tablet-post-toc-mask">
+            <div class="tablet-post-toc">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%B7%A6%E5%8C%B9%E9%85%8D%E5%8E%9F%E5%88%99"><span class="nav-text">最左匹配原则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E8%B7%B3%E8%B7%83%E6%89%AB%E6%8F%8FISS"><span class="nav-text">索引跳跃扫描ISS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E4%B8%8B%E6%8E%A8ICP"><span class="nav-text">索引下推ICP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E8%A6%86%E7%9B%96"><span class="nav-text">索引覆盖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MRR%EF%BC%88Multi-Range-Read%EF%BC%89"><span class="nav-text">MRR（Multi-Range Read）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6index-merge"><span class="nav-text">索引合并index merge</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%88%E5%B9%B6%E7%AE%97%E6%B3%95"><span class="nav-text">合并算法</span></a></li></ol></li></ol>
+    </div>
+</div>
+
+            </div>
+        </div>
+    
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/dark-light-toggle.js"></script>
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/code-block.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/lazyload.js"></script>
+
+
+<div class="post-scripts pjax">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/post-helper.js"></script>
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/libs/anime.min.js"></script>
+        
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/toc.js"></script>
+        
+    
+    
+    
+</div>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.7.0/source/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            KEEP.refresh();
+        });
+    });
+</script>
+
+
+
+
+</body>
+</html>
